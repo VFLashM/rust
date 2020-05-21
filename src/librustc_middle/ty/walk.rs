@@ -3,8 +3,8 @@
 
 use crate::ty;
 use crate::ty::subst::{GenericArg, GenericArgKind};
-use smallvec::{self, SmallVec};
 use rustc_data_structures::fx::FxHashSet;
+use smallvec::{self, SmallVec};
 
 // The TypeWalker's stack is hot enough that it's worth going to some effort to
 // avoid heap allocations.
@@ -85,12 +85,13 @@ impl GenericArg<'tcx> {
     /// Iterator only walks items once.
     /// It accepts visited set, updates it with all visited types
     /// and skips any types that are already there.
-    pub fn walk_shallow(self, visited: &mut FxHashSet<GenericArg<'tcx>>) -> impl Iterator<Item = GenericArg<'tcx>> {
+    pub fn walk_shallow(
+        self,
+        visited: &mut FxHashSet<GenericArg<'tcx>>,
+    ) -> impl Iterator<Item = GenericArg<'tcx>> {
         let mut stack = SmallVec::new();
         push_inner(&mut stack, self);
-        stack.retain(|a| {
-            visited.insert(*a)
-        });
+        stack.retain(|a| visited.insert(*a));
         stack.into_iter()
     }
 }

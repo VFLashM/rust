@@ -57,7 +57,12 @@ impl<'tcx> TyCtxt<'tcx> {
     }
 }
 
-fn compute_components(tcx: TyCtxt<'tcx>, ty: Ty<'tcx>, out: &mut SmallVec<[Component<'tcx>; 4]>, visited: &mut FxHashSet<GenericArg<'tcx>>) {
+fn compute_components(
+    tcx: TyCtxt<'tcx>,
+    ty: Ty<'tcx>,
+    out: &mut SmallVec<[Component<'tcx>; 4]>,
+    visited: &mut FxHashSet<GenericArg<'tcx>>,
+) {
     // Descend through the types, looking for the various "base"
     // components and collecting them into `out`. This is not written
     // with `collect()` because of the need to sometimes skip subtrees

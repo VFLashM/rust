@@ -36,11 +36,17 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
         let mut visited = FxHashSet::default();
         match generic {
             GenericKind::Param(param_ty) => self.param_bound(param_ty),
-            GenericKind::Projection(projection_ty) => self.projection_bound(projection_ty, &mut visited),
+            GenericKind::Projection(projection_ty) => {
+                self.projection_bound(projection_ty, &mut visited)
+            }
         }
     }
 
-    fn type_bound(&self, ty: Ty<'tcx>, visited: &mut FxHashSet<GenericArg<'tcx>>) -> VerifyBound<'tcx> {
+    fn type_bound(
+        &self,
+        ty: Ty<'tcx>,
+        visited: &mut FxHashSet<GenericArg<'tcx>>,
+    ) -> VerifyBound<'tcx> {
         match ty.kind {
             ty::Param(p) => self.param_bound(p),
             ty::Projection(data) => self.projection_bound(data, visited),
@@ -140,7 +146,11 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
         self.declared_projection_bounds_from_trait(projection_ty)
     }
 
-    pub fn projection_bound(&self, projection_ty: ty::ProjectionTy<'tcx>, visited: &mut FxHashSet<GenericArg<'tcx>>) -> VerifyBound<'tcx> {
+    pub fn projection_bound(
+        &self,
+        projection_ty: ty::ProjectionTy<'tcx>,
+        visited: &mut FxHashSet<GenericArg<'tcx>>,
+    ) -> VerifyBound<'tcx> {
         debug!("projection_bound(projection_ty={:?})", projection_ty);
 
         let projection_ty_as_ty =
@@ -174,7 +184,11 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
         VerifyBound::AnyBound(env_bounds.chain(trait_bounds).collect()).or(recursive_bound)
     }
 
-    fn recursive_bound(&self, parent: GenericArg<'tcx>, visited: &mut FxHashSet<GenericArg<'tcx>>) -> VerifyBound<'tcx> {
+    fn recursive_bound(
+        &self,
+        parent: GenericArg<'tcx>,
+        visited: &mut FxHashSet<GenericArg<'tcx>>,
+    ) -> VerifyBound<'tcx> {
         let mut bounds = parent
             .walk_shallow(visited)
             .filter_map(|child| match child.unpack() {
