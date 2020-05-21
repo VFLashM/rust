@@ -2,6 +2,7 @@ use crate::infer::outlives::env::RegionBoundPairs;
 use crate::infer::{GenericKind, VerifyBound};
 use crate::traits;
 use rustc_data_structures::captures::Captures;
+use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::def_id::DefId;
 use rustc_middle::ty::subst::{GenericArg, GenericArgKind, InternalSubsts, Subst};
 use rustc_middle::ty::{self, Ty, TyCtxt};
@@ -32,16 +33,17 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
     /// Returns a "verify bound" that encodes what we know about
     /// `generic` and the regions it outlives.
     pub fn generic_bound(&self, generic: GenericKind<'tcx>) -> VerifyBound<'tcx> {
+        let mut visited = FxHashSet::default();
         match generic {
             GenericKind::Param(param_ty) => self.param_bound(param_ty),
-            GenericKind::Projection(projection_ty) => self.projection_bound(projection_ty),
+            GenericKind::Projection(projection_ty) => self.projection_bound(projection_ty, &mut visited),
         }
     }
 
-    fn type_bound(&self, ty: Ty<'tcx>) -> VerifyBound<'tcx> {
+    fn type_bound(&self, ty: Ty<'tcx>, visited: &mut FxHashSet<GenericArg<'tcx>>) -> VerifyBound<'tcx> {
         match ty.kind {
             ty::Param(p) => self.param_bound(p),
-            ty::Projection(data) => self.projection_bound(data),
+            ty::Projection(data) => self.projection_bound(data, visited),
             ty::FnDef(_, substs) => {
                 // HACK(eddyb) ignore lifetimes found shallowly in `substs`.
                 // This is inconsistent with `ty::Adt` (including all substs),
@@ -51,9 +53,9 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
                 let mut bounds = substs
                     .iter()
                     .filter_map(|&child| match child.unpack() {
-                        GenericArgKind::Type(ty) => Some(self.type_bound(ty)),
+                        GenericArgKind::Type(ty) => Some(self.type_bound(ty, visited)),
                         GenericArgKind::Lifetime(_) => None,
-                        GenericArgKind::Const(_) => Some(self.recursive_bound(child)),
+                        GenericArgKind::Const(_) => Some(self.recursive_bound(child, visited)),
                     })
                     .filter(|bound| {
                         // Remove bounds that must hold, since they are not interesting.
@@ -67,7 +69,7 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
                     ),
                 }
             }
-            _ => self.recursive_bound(ty.into()),
+            _ => self.recursive_bound(ty.into(), visited),
         }
     }
 
@@ -138,7 +140,7 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
         self.declared_projection_bounds_from_trait(projection_ty)
     }
 
-    pub fn projection_bound(&self, projection_ty: ty::ProjectionTy<'tcx>) -> VerifyBound<'tcx> {
+    pub fn projection_bound(&self, projection_ty: ty::ProjectionTy<'tcx>, visited: &mut FxHashSet<GenericArg<'tcx>>) -> VerifyBound<'tcx> {
         debug!("projection_bound(projection_ty={:?})", projection_ty);
 
         let projection_ty_as_ty =
@@ -167,21 +169,21 @@ impl<'cx, 'tcx> VerifyBoundCx<'cx, 'tcx> {
 
         // see the extensive comment in projection_must_outlive
         let ty = self.tcx.mk_projection(projection_ty.item_def_id, projection_ty.substs);
-        let recursive_bound = self.recursive_bound(ty.into());
+        let recursive_bound = self.recursive_bound(ty.into(), visited);
 
         VerifyBound::AnyBound(env_bounds.chain(trait_bounds).collect()).or(recursive_bound)
     }
 
-    fn recursive_bound(&self, parent: GenericArg<'tcx>) -> VerifyBound<'tcx> {
+    fn recursive_bound(&self, parent: GenericArg<'tcx>, visited: &mut FxHashSet<GenericArg<'tcx>>) -> VerifyBound<'tcx> {
         let mut bounds = parent
-            .walk_shallow()
+            .walk_shallow(visited)
             .filter_map(|child| match child.unpack() {
-                GenericArgKind::Type(ty) => Some(self.type_bound(ty)),
+                GenericArgKind::Type(ty) => Some(self.type_bound(ty, visited)),
                 GenericArgKind::Lifetime(lt) => {
                     // Ignore late-bound regions.
                     if !lt.is_late_bound() { Some(VerifyBound::OutlivedBy(lt)) } else { None }
                 }
-                GenericArgKind::Const(_) => Some(self.recursive_bound(child)),
+                GenericArgKind::Const(_) => Some(self.recursive_bound(child, visited)),
             })
             .filter(|bound| {
                 // Remove bounds that must hold, since they are not interesting.
