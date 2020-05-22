@@ -5,6 +5,41 @@ use crate::ty;
 use crate::ty::subst::{GenericArg, GenericArgKind};
 use rustc_data_structures::fx::FxHashSet;
 use smallvec::{self, SmallVec};
+use arrayvec::ArrayVec;
+use std::hash::Hash;
+
+pub enum MiniSet<T> {
+    Array(ArrayVec<[T; 64]>),
+    Set(FxHashSet<T>),
+}
+
+impl<T: Eq + Hash + Copy> MiniSet<T> {
+    pub fn new() -> Self {
+        MiniSet::Array(ArrayVec::new())
+    }
+
+    pub fn insert(&mut self, elem: T) -> bool {
+        match self {
+            MiniSet::Array(array) => {
+                if array.iter().any(|e| *e == elem) {
+                    false
+                } else {
+                    if !array.is_full() {
+                        unsafe {
+                            array.push_unchecked(elem);
+                        }
+                    } else {
+                        let mut set: FxHashSet<T> = array.iter().copied().collect();
+                        set.insert(elem);
+                        *self = MiniSet::Set(set);
+                    }
+                    true
+                }
+            },
+            MiniSet::Set(set) => set.insert(elem)
+        }
+    }
+}
 
 // The TypeWalker's stack is hot enough that it's worth going to some effort to
 // avoid heap allocations.
@@ -13,7 +48,7 @@ type TypeWalkerStack<'tcx> = SmallVec<[GenericArg<'tcx>; 8]>;
 pub struct TypeWalker<'tcx> {
     stack: TypeWalkerStack<'tcx>,
     last_subtree: usize,
-    visited: FxHashSet<GenericArg<'tcx>>,
+    visited: MiniSet<GenericArg<'tcx>>,
 }
 
 /// An iterator for walking the type tree.
@@ -26,7 +61,7 @@ pub struct TypeWalker<'tcx> {
 /// skips any types that are already there.
 impl<'tcx> TypeWalker<'tcx> {
     pub fn new(root: GenericArg<'tcx>) -> Self {
-        Self { stack: smallvec![root], last_subtree: 1, visited: FxHashSet::default() }
+        Self { stack: smallvec![root], last_subtree: 1, visited: MiniSet::new() }
     }
 
     /// Skips the subtree corresponding to the last type
@@ -87,7 +122,7 @@ impl GenericArg<'tcx> {
     /// and skips any types that are already there.
     pub fn walk_shallow(
         self,
-        visited: &mut FxHashSet<GenericArg<'tcx>>,
+        visited: &mut MiniSet<GenericArg<'tcx>>,
     ) -> impl Iterator<Item = GenericArg<'tcx>> {
         let mut stack = SmallVec::new();
         push_inner(&mut stack, self);
