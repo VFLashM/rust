@@ -3,21 +3,32 @@
 
 use crate::ty;
 use crate::ty::subst::{GenericArg, GenericArgKind};
+use arrayvec::ArrayVec;
 use rustc_data_structures::fx::FxHashSet;
 use smallvec::{self, SmallVec};
-use arrayvec::ArrayVec;
 use std::hash::Hash;
 
-pub enum MiniSet<T> {
-    Array(ArrayVec<[T; 64]>),
+/// Small-storage-optimized implementation of a set
+/// made specifically for walking type tree.
+///
+/// Stores elements in a small array up to a certain length
+/// and switches to `HashSet` when that lenght is exceeded.
+pub enum MiniSet<T: Eq + Hash + Copy> {
+    Array(ArrayVec<[T; 8]>),
     Set(FxHashSet<T>),
 }
 
 impl<T: Eq + Hash + Copy> MiniSet<T> {
+    /// Creates an empty `MiniSet`.
     pub fn new() -> Self {
         MiniSet::Array(ArrayVec::new())
     }
 
+    /// Adds a value to the set.
+    ///
+    /// If the set did not have this value present, true is returned.
+    ///
+    /// If the set did have this value present, false is returned.
     pub fn insert(&mut self, elem: T) -> bool {
         match self {
             MiniSet::Array(array) => {
@@ -35,8 +46,8 @@ impl<T: Eq + Hash + Copy> MiniSet<T> {
                     }
                     true
                 }
-            },
-            MiniSet::Set(set) => set.insert(elem)
+            }
+            MiniSet::Set(set) => set.insert(elem),
         }
     }
 }
