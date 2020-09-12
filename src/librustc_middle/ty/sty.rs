@@ -367,7 +367,7 @@ impl<'tcx> ClosureSubsts<'tcx> {
     }
 
     #[inline]
-    pub fn upvar_tys(self) -> impl Iterator<Item = Ty<'tcx>> + 'tcx {
+    pub fn upvar_tys(self) -> impl DoubleEndedIterator<Item = Ty<'tcx>> + 'tcx {
         self.tupled_upvars_ty().tuple_fields()
     }
 

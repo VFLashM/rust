@@ -4,6 +4,7 @@
 use crate::ty;
 use crate::ty::subst::{GenericArg, GenericArgKind};
 use smallvec::{self, SmallVec};
+use itertools::Itertools;
 
 // The TypeWalker's stack is hot enough that it's worth going to some effort to
 // avoid heap allocations.
@@ -148,11 +149,32 @@ fn push_inner<'tcx>(stack: &mut TypeWalkerStack<'tcx>, parent: GenericArg<'tcx>)
             }
             ty::Adt(_, substs)
             | ty::Opaque(_, substs)
-            | ty::Closure(_, substs)
             | ty::Generator(_, substs, _)
             | ty::Tuple(substs)
             | ty::FnDef(_, substs) => {
                 stack.extend(substs.iter().rev());
+            }
+            ty::Closure(_, substs) => {
+                let closure_substs = substs.as_closure();
+                let sig = closure_substs.sig();
+
+                // Closure signature and upvar types tuple
+                // almost always contain duplicated types.
+                //
+                // When nesting closures this often produces
+                // exponentially large type trees.
+                //
+                // This code deduplicates generic arguments in upvars
+                // and function signature in order to allow efficient
+                // deep nesting of closures.
+                let mut sub_args = TypeWalkerStack::new();
+                sub_args.extend(closure_substs.upvar_tys().rev().map(|ty| ty.into()));
+                sub_args.push(sig.skip_binder().output().into());
+                sub_args.extend(sig.skip_binder().inputs().iter().copied().rev().map(|ty| ty.into()));
+                stack.extend(sub_args.iter().unique().copied());
+
+                stack.push(closure_substs.kind_ty().into());
+                stack.extend(closure_substs.parent_substs().iter().rev().copied());
             }
             ty::GeneratorWitness(ts) => {
                 stack.extend(ts.skip_binder().iter().rev().map(|ty| ty.into()));

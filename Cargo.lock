@@ -3659,6 +3659,7 @@ dependencies = [
  "bitflags",
  "byteorder",
  "chalk-ir",
+ "itertools 0.8.0",
  "measureme",
  "polonius-engine",
  "rustc-rayon-core",
