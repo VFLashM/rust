@@ -10,7 +10,6 @@ use rustc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
 use rustc_codegen_ssa::mir::operand::OperandValue;
 use rustc_codegen_ssa::mir::place::PlaceRef;
 use rustc_codegen_ssa::traits::*;
-use rustc_data_structures::fx::FxHashMap;
 use rustc_hir as hir;
 use rustc_middle::span_bug;
 use rustc_middle::ty::layout::TyAndLayout;
@@ -126,7 +125,7 @@ impl AsmBuilderMethods<'tcx> for Builder<'a, 'll, 'tcx> {
         // Collect the types of output operands
         let mut constraints = vec![];
         let mut output_types = vec![];
-        let mut op_idx = FxHashMap::default();
+        let mut op_idx = fx_hash_map!();
         for (idx, op) in operands.iter().enumerate() {
             match *op {
                 InlineAsmOperandRef::Out { reg, late, place } => {

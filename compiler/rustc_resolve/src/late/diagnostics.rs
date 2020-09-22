@@ -1081,7 +1081,7 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
 
     fn find_module(&mut self, def_id: DefId) -> Option<(Module<'a>, ImportSuggestion)> {
         let mut result = None;
-        let mut seen_modules = FxHashSet::default();
+        let mut seen_modules = fx_hash_set!();
         let mut worklist = vec![(self.r.graph_root, Vec::new())];
 
         while let Some((in_module, path_segments)) = worklist.pop() {

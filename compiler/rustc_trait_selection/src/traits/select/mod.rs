@@ -25,7 +25,7 @@ use super::{Overflow, SelectionError, Unimplemented};
 use crate::infer::{InferCtxt, InferOk, TypeFreshener};
 use crate::traits::error_reporting::InferCtxtExt;
 use crate::traits::project::ProjectionCacheKeyExt;
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stack::ensure_sufficient_stack;
 use rustc_errors::ErrorReported;
 use rustc_hir as hir;
@@ -2132,7 +2132,7 @@ impl<'cx, 'tcx> SelectionContext<'cx, 'tcx> {
             }
         } else {
             // Three or more elements. Use a general deduplication process.
-            let mut seen = FxHashSet::default();
+            let mut seen = fx_hash_set!();
             obligations.retain(|i| seen.insert(i.clone()));
         }
 

@@ -4,7 +4,6 @@ use crate::hir::{Owner, OwnerNodes, ParentedNode};
 use crate::ich::StableHashingContext;
 use crate::middle::cstore::CrateStore;
 use rustc_data_structures::fingerprint::Fingerprint;
-use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_data_structures::svh::Svh;
 use rustc_hir as hir;
@@ -207,7 +206,7 @@ impl<'a, 'hir> NodeCollector<'a, 'hir> {
             data.with_bodies = Some(arena.alloc(OwnerNodes {
                 hash,
                 nodes: IndexVec::new(),
-                bodies: FxHashMap::default(),
+                bodies: fx_hash_map!(),
             }));
         }
 

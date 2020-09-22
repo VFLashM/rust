@@ -67,7 +67,6 @@
 
 use crate::constrained_generic_params as cgp;
 
-use rustc_data_structures::fx::FxHashSet;
 use rustc_hir as hir;
 use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_infer::infer::outlives::env::OutlivesEnvironment;
@@ -189,8 +188,8 @@ fn unconstrained_parent_impl_substs<'tcx>(
     impl_substs: SubstsRef<'tcx>,
 ) -> Vec<GenericArg<'tcx>> {
     let impl_generic_predicates = tcx.predicates_of(impl_def_id);
-    let mut unconstrained_parameters = FxHashSet::default();
-    let mut constrained_params = FxHashSet::default();
+    let mut unconstrained_parameters = fx_hash_set!();
+    let mut constrained_params = fx_hash_set!();
     let impl_trait_ref = tcx.impl_trait_ref(impl_def_id);
 
     // Unfortunately the functions in `constrained_generic_parameters` don't do

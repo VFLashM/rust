@@ -264,7 +264,7 @@ fn could_use_elision<'tcx>(
 }
 
 fn allowed_lts_from(named_generics: &[GenericParam<'_>]) -> FxHashSet<RefLt> {
-    let mut allowed_lts = FxHashSet::default();
+    let mut allowed_lts = fx_hash_set!();
     for par in named_generics.iter() {
         if let GenericParamKind::Lifetime { .. } = par.kind {
             if par.bounds.is_empty() {

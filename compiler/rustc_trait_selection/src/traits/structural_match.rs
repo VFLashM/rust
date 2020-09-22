@@ -54,7 +54,7 @@ pub fn search_for_structural_match_violation<'tcx>(
 ) -> Option<NonStructuralMatchTy<'tcx>> {
     // FIXME: we should instead pass in an `infcx` from the outside.
     tcx.infer_ctxt().enter(|infcx| {
-        let mut search = Search { infcx, span, found: None, seen: FxHashSet::default() };
+        let mut search = Search { infcx, span, found: None, seen: fx_hash_set!() };
         ty.visit_with(&mut search);
         search.found
     })

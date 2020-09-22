@@ -44,7 +44,7 @@ impl Hash for CssPath {
 
 impl CssPath {
     fn new(name: String) -> CssPath {
-        CssPath { name, children: FxHashSet::default() }
+        CssPath { name, children: fx_hash_set!() }
     }
 }
 

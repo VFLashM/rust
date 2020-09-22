@@ -98,7 +98,7 @@ impl TraitBounds {
             hasher.hash_ty(ty);
             hasher.finish()
         };
-        let mut map = FxHashMap::default();
+        let mut map = fx_hash_map!();
         let mut applicability = Applicability::MaybeIncorrect;
         for bound in gen.where_clause.predicates {
             if_chain! {
@@ -152,7 +152,7 @@ fn check_trait_bound_duplication(cx: &LateContext<'_>, gen: &'_ Generics<'_>) {
         return;
     }
 
-    let mut map = FxHashMap::default();
+    let mut map = fx_hash_map!();
     for param in gen.params {
         if let ParamName::Plain(ref ident) = param.name {
             let res = param

@@ -3,7 +3,7 @@
 
 use rustc_ast::Attribute;
 use rustc_attr::{self as attr, ConstStability, Stability};
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Res};
@@ -427,7 +427,7 @@ impl<'tcx> Visitor<'tcx> for MissingStabilityAnnotations<'tcx> {
 fn new_index(tcx: TyCtxt<'tcx>) -> Index<'tcx> {
     let is_staged_api =
         tcx.sess.opts.debugging_opts.force_unstable_if_unmarked || tcx.features().staged_api;
-    let mut staged_api = FxHashMap::default();
+    let mut staged_api = fx_hash_map!();
     staged_api.insert(LOCAL_CRATE, is_staged_api);
     let mut index = Index {
         staged_api,
@@ -682,7 +682,7 @@ pub fn check_unused_or_stable_features(tcx: TyCtxt<'_>) {
     }
 
     let declared_lang_features = &tcx.features().declared_lang_features;
-    let mut lang_features = FxHashSet::default();
+    let mut lang_features = fx_hash_set!();
     for &(feature, span, since) in declared_lang_features {
         if let Some(since) = since {
             // Warn if the user has enabled an already-stable lang feature.
@@ -695,7 +695,7 @@ pub fn check_unused_or_stable_features(tcx: TyCtxt<'_>) {
     }
 
     let declared_lib_features = &tcx.features().declared_lib_features;
-    let mut remaining_lib_features = FxHashMap::default();
+    let mut remaining_lib_features = fx_hash_map!();
     for (feature, span) in declared_lib_features {
         if remaining_lib_features.contains_key(&feature) {
             // Warn if the user enables a lib feature multiple times.

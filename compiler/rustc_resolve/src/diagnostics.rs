@@ -4,7 +4,6 @@ use std::ptr;
 use rustc_ast::util::lev_distance::find_best_match_for_name;
 use rustc_ast::{self as ast, Path};
 use rustc_ast_pretty::pprust;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder};
 use rustc_feature::BUILTIN_ATTRIBUTES;
 use rustc_hir::def::Namespace::{self, *};
@@ -746,7 +745,7 @@ impl<'a> Resolver<'a> {
         FilterFn: Fn(Res) -> bool,
     {
         let mut candidates = Vec::new();
-        let mut seen_modules = FxHashSet::default();
+        let mut seen_modules = fx_hash_set!();
         let not_local_module = crate_name.name != kw::Crate;
         let mut worklist =
             vec![(start_module, Vec::<ast::PathSegment>::new(), true, not_local_module)];

@@ -1027,7 +1027,7 @@ impl<'a: 'ast, 'b, 'ast> LateResolutionVisitor<'a, 'b, 'ast> {
         debug!("with_generic_param_rib");
         let mut function_type_rib = Rib::new(kind);
         let mut function_value_rib = Rib::new(kind);
-        let mut seen_bindings = FxHashMap::default();
+        let mut seen_bindings = fx_hash_map!();
 
         // We also can't shadow bindings from the parent item
         if let AssocItemRibKind = kind {
@@ -1364,7 +1364,7 @@ impl<'a: 'ast, 'b, 'ast> LateResolutionVisitor<'a, 'b, 'ast> {
     /// that expands into an or-pattern where one 'x' was from the
     /// user and one 'x' came from the macro.
     fn binding_mode_map(&mut self, pat: &Pat) -> BindingMap {
-        let mut binding_map = FxHashMap::default();
+        let mut binding_map = fx_hash_map!();
 
         pat.walk(&mut |pat| {
             match pat.kind {
@@ -1400,8 +1400,8 @@ impl<'a: 'ast, 'b, 'ast> LateResolutionVisitor<'a, 'b, 'ast> {
     /// Checks that all of the arms in an or-pattern have exactly the
     /// same set of bindings, with the same binding modes for each.
     fn check_consistent_bindings(&mut self, pats: &[P<Pat>]) -> Vec<BindingMap> {
-        let mut missing_vars = FxHashMap::default();
-        let mut inconsistent_vars = FxHashMap::default();
+        let mut missing_vars = fx_hash_map!();
+        let mut inconsistent_vars = fx_hash_map!();
 
         // 1) Compute the binding maps of all arms.
         let maps = pats.iter().map(|pat| self.binding_mode_map(pat)).collect::<Vec<_>>();

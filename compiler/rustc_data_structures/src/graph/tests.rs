@@ -17,8 +17,8 @@ impl TestGraph {
         let mut graph = TestGraph {
             num_nodes: start_node + 1,
             start_node,
-            successors: FxHashMap::default(),
-            predecessors: FxHashMap::default(),
+            successors: fx_hash_map!(),
+            predecessors: fx_hash_map!(),
         };
         for &(source, target) in edges {
             graph.num_nodes = max(graph.num_nodes, source + 1);

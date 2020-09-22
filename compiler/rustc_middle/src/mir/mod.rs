@@ -21,7 +21,6 @@ use rustc_target::abi::VariantIdx;
 
 use polonius_engine::Atom;
 pub use rustc_ast::Mutability;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::dominators::{dominators, Dominators};
 use rustc_data_structures::graph::{self, GraphSuccessors};
 use rustc_index::bit_set::BitMatrix;
@@ -2642,7 +2641,7 @@ impl Location {
 
         // If we're in another block, then we want to check that block is a predecessor of `other`.
         let mut queue: Vec<BasicBlock> = predecessors[other.block].to_vec();
-        let mut visited = FxHashSet::default();
+        let mut visited = fx_hash_set!();
 
         while let Some(block) = queue.pop() {
             // If we haven't visited this block before, then make sure we visit it's predecessors.

@@ -380,7 +380,7 @@ fn find_opaque_ty_constraints(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Ty<'_> {
                 // performs the same checks, in theory, but I've kept it here
                 // using `delay_span_bug`, just in case `wfcheck` slips up.
                 let opaque_generics = self.tcx.generics_of(self.def_id);
-                let mut used_params: FxHashSet<_> = FxHashSet::default();
+                let mut used_params: FxHashSet<_> = fx_hash_set!();
                 for (i, arg) in substs.iter().enumerate() {
                     let arg_is_param = match arg.unpack() {
                         GenericArgKind::Type(ty) => matches!(ty.kind(), ty::Param(_)),

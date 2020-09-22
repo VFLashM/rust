@@ -11,7 +11,7 @@
 use crate::constrained_generic_params as cgp;
 use min_specialization::check_min_specialization;
 
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_hir::def_id::LocalDefId;
@@ -230,8 +230,8 @@ fn report_unused_parameter(tcx: TyCtxt<'_>, span: Span, kind: &str, name: &str) 
 
 /// Enforce that we do not have two items in an impl with the same name.
 fn enforce_impl_items_are_distinct(tcx: TyCtxt<'_>, impl_item_refs: &[hir::ImplItemRef<'_>]) {
-    let mut seen_type_items = FxHashMap::default();
-    let mut seen_value_items = FxHashMap::default();
+    let mut seen_type_items = fx_hash_map!();
+    let mut seen_value_items = fx_hash_map!();
     for impl_item_ref in impl_item_refs {
         let impl_item = tcx.hir().impl_item(impl_item_ref.id);
         let seen_items = match impl_item.kind {

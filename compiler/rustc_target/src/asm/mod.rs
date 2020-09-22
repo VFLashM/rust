@@ -40,11 +40,10 @@ macro_rules! def_reg_class {
             super::InlineAsmRegClass,
             rustc_data_structures::fx::FxHashSet<super::InlineAsmReg>,
         > {
-            use rustc_data_structures::fx::{FxHashMap, FxHashSet};
             use super::InlineAsmRegClass;
-            let mut map = FxHashMap::default();
+            let mut map = fx_hash_map!();
             $(
-                map.insert(InlineAsmRegClass::$arch($arch_regclass::$class), FxHashSet::default());
+                map.insert(InlineAsmRegClass::$arch($arch_regclass::$class), fx_hash_set!());
             )*
             map
         }

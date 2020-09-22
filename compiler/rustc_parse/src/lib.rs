@@ -5,6 +5,9 @@
 #![feature(bindings_after_at)]
 #![feature(or_patterns)]
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 use rustc_ast as ast;
 use rustc_ast::token::{self, DelimToken, Nonterminal, Token, TokenKind};
 use rustc_ast::tokenstream::{self, Spacing, TokenStream, TokenTree};

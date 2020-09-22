@@ -42,6 +42,9 @@ extern crate rustc_middle;
 #[macro_use]
 extern crate rustc_session;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 mod array_into_iter;
 pub mod builtin;
 mod context;

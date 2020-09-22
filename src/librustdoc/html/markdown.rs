@@ -577,7 +577,7 @@ struct Footnotes<'a, I: Iterator<Item = Event<'a>>> {
 
 impl<'a, I: Iterator<Item = Event<'a>>> Footnotes<'a, I> {
     fn new(iter: I) -> Self {
-        Footnotes { inner: iter, footnotes: FxHashMap::default() }
+        Footnotes { inner: iter, footnotes: fx_hash_map!() }
     }
     fn get_entry(&mut self, key: &str) -> &mut (Vec<Event<'a>>, u16) {
         let new_id = self.footnotes.keys().count() + 1;
@@ -1215,7 +1215,7 @@ pub struct IdMap {
 }
 
 fn init_id_map() -> FxHashMap<String, usize> {
-    let mut map = FxHashMap::default();
+    let mut map = fx_hash_map!();
     // This is the list of IDs used by rustdoc templates.
     map.insert("mainThemeStyle".to_owned(), 1);
     map.insert("themeStyle".to_owned(), 1);

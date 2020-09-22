@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use rustc_data_structures::fx::FxHashMap;
 use rustc_span::symbol::sym;
 use serde::Serialize;
 
@@ -63,7 +62,7 @@ pub fn extern_location(
 
 /// Builds the search index from the collected metadata
 pub fn build_index(krate: &clean::Crate, cache: &mut Cache) -> String {
-    let mut defid_to_pathid = FxHashMap::default();
+    let mut defid_to_pathid = fx_hash_map!();
     let mut crate_items = Vec::with_capacity(cache.search_index.len());
     let mut crate_paths = vec![];
 

@@ -56,8 +56,8 @@ fn parse_args<'a>(
     let mut args = AsmArgs {
         templates: vec![first_template],
         operands: vec![],
-        named_args: FxHashMap::default(),
-        reg_args: FxHashSet::default(),
+        named_args: fx_hash_map!(),
+        reg_args: fx_hash_set!(),
         options: ast::InlineAsmOptions::empty(),
         options_spans: vec![],
     };

@@ -130,7 +130,7 @@ where
 
         let MemberConstraintSet { first_constraints, mut constraints, choice_regions } = self;
 
-        let mut first_constraints2 = FxHashMap::default();
+        let mut first_constraints2 = fx_hash_map!();
         first_constraints2.reserve(first_constraints.len());
 
         for (r1, start1) in first_constraints {

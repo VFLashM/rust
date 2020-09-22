@@ -327,7 +327,7 @@ impl<'mir, 'tcx: 'mir, M: Machine<'mir, 'tcx>> InterpCx<'mir, 'tcx, M> {
             tcx: tcx.at(root_span),
             param_env,
             memory: Memory::new(tcx, memory_extra),
-            vtables: FxHashMap::default(),
+            vtables: fx_hash_map!(),
         }
     }
 

@@ -358,7 +358,7 @@ impl<'a> CrateLocator<'a> {
         if !self.exact_paths.is_empty() {
             return self.find_commandline_library();
         }
-        let mut seen_paths = FxHashSet::default();
+        let mut seen_paths = fx_hash_set!();
         if let Some(extra_filename) = self.extra_filename {
             if let library @ Some(_) = self.find_library_crate(extra_filename, &mut seen_paths)? {
                 return Ok(library);
@@ -448,7 +448,7 @@ impl<'a> CrateLocator<'a> {
         // A Library candidate is created if the metadata for the set of
         // libraries corresponds to the crate id and hash criteria that this
         // search is being performed for.
-        let mut libraries = FxHashMap::default();
+        let mut libraries = fx_hash_map!();
         for (_hash, (rlibs, rmetas, dylibs)) in candidates {
             if let Some((svh, lib)) = self.extract_lib(rlibs, rmetas, dylibs)? {
                 libraries.insert(svh, lib);
@@ -666,9 +666,9 @@ impl<'a> CrateLocator<'a> {
         // First, filter out all libraries that look suspicious. We only accept
         // files which actually exist that have the correct naming scheme for
         // rlibs/dylibs.
-        let mut rlibs = FxHashMap::default();
-        let mut rmetas = FxHashMap::default();
-        let mut dylibs = FxHashMap::default();
+        let mut rlibs = fx_hash_map!();
+        let mut rmetas = fx_hash_map!();
+        let mut dylibs = fx_hash_map!();
         for loc in &self.exact_paths {
             if !loc.exists() {
                 return Err(CrateError::ExternLocationNotExist(self.crate_name, loc.clone()));

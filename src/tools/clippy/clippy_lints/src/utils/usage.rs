@@ -13,7 +13,7 @@ use rustc_typeck::expr_use_visitor::{ConsumeMode, Delegate, ExprUseVisitor, Plac
 /// Returns a set of mutated local variable IDs, or `None` if mutations could not be determined.
 pub fn mutated_variables<'tcx>(expr: &'tcx Expr<'_>, cx: &LateContext<'tcx>) -> Option<FxHashSet<HirId>> {
     let mut delegate = MutVarsDelegate {
-        used_mutably: FxHashSet::default(),
+        used_mutably: fx_hash_set!(),
         skip: false,
     };
     let def_id = expr.hir_id.owner.to_def_id();

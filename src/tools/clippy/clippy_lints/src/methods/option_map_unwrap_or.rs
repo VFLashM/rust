@@ -27,7 +27,7 @@ pub(super) fn lint<'tcx>(
 
             let mut unwrap_visitor = UnwrapVisitor {
                 cx,
-                identifiers: FxHashSet::default(),
+                identifiers: fx_hash_set!(),
             };
             unwrap_visitor.visit_expr(&unwrap_args[1]);
 

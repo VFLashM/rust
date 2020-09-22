@@ -23,7 +23,7 @@ pub fn infer_predicates<'tcx>(
 
     let mut predicates_added = true;
 
-    let mut global_inferred_outlives = FxHashMap::default();
+    let mut global_inferred_outlives = fx_hash_map!();
 
     // If new predicates were added then we need to re-calculate
     // all crates since there could be new implied predicates.

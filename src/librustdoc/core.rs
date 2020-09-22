@@ -396,7 +396,7 @@ pub fn run_core(
             // hack so that `used_trait_imports` won't try to call typeck
             providers.used_trait_imports = |_, _| {
                 lazy_static! {
-                    static ref EMPTY_SET: FxHashSet<LocalDefId> = FxHashSet::default();
+                    static ref EMPTY_SET: FxHashSet<LocalDefId> = fx_hash_set!();
                 }
                 &EMPTY_SET
             };
@@ -552,7 +552,7 @@ fn run_global_ctxt(
             .filter(|trait_def_id| tcx.trait_is_auto(*trait_def_id))
             .collect(),
         render_options,
-        module_trait_cache: RefCell::new(FxHashMap::default()),
+        module_trait_cache: RefCell::new(fx_hash_map!()),
     };
     debug!("crate: {:?}", tcx.hir().krate());
 

@@ -449,7 +449,7 @@ fn has_doc(sess: &Session, attr: &ast::Attribute) -> bool {
 
 impl MissingDoc {
     pub fn new() -> MissingDoc {
-        MissingDoc { doc_hidden_stack: vec![false], private_traits: FxHashSet::default() }
+        MissingDoc { doc_hidden_stack: vec![false], private_traits: fx_hash_set!() }
     }
 
     fn doc_hidden(&self) -> bool {
@@ -2600,7 +2600,7 @@ impl SymbolName {
 
 impl ClashingExternDeclarations {
     crate fn new() -> Self {
-        ClashingExternDeclarations { seen_decls: FxHashMap::default() }
+        ClashingExternDeclarations { seen_decls: fx_hash_map!() }
     }
     /// Insert a new foreign item into the seen set. If a symbol with the same name already exists
     /// for the item, return its HirId without updating the set.
@@ -2847,7 +2847,7 @@ impl ClashingExternDeclarations {
                 })
             }
         }
-        let mut seen_types = FxHashSet::default();
+        let mut seen_types = fx_hash_set!();
         structurally_same_type_impl(&mut seen_types, cx, a, b, ckind)
     }
 }

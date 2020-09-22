@@ -42,7 +42,7 @@ impl<'tcx, F> NeedsDropTypes<'tcx, F> {
         ty: Ty<'tcx>,
         adt_components: F,
     ) -> Self {
-        let mut seen_tys = FxHashSet::default();
+        let mut seen_tys = fx_hash_set!();
         seen_tys.insert(ty);
         Self {
             tcx,

@@ -1,6 +1,5 @@
 //! Validity checking for weak lang items
 
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
@@ -52,7 +51,7 @@ fn verify<'tcx>(tcx: TyCtxt<'tcx>, items: &lang_items::LanguageItems) {
         return;
     }
 
-    let mut missing = FxHashSet::default();
+    let mut missing = fx_hash_set!();
     for &cnum in tcx.crates().iter() {
         for &item in tcx.missing_lang_items(cnum).iter() {
             missing.insert(item);

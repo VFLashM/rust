@@ -9,7 +9,6 @@ use rustc_ast::{
     ExprKind, Item, ItemKind, Mutability, Param, Pat, PatKind, PathSegment, QSelf, Ty, TyKind,
 };
 use rustc_ast_pretty::pprust;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{pluralize, struct_span_err};
 use rustc_errors::{Applicability, DiagnosticBuilder, Handler, PResult};
 use rustc_span::source_map::Spanned;
@@ -1674,7 +1673,7 @@ impl<'a> Parser<'a> {
     /// the local scope), but if we find the same name multiple times, like in `fn foo(i8, i8)`,
     /// we deduplicate them to not complain about duplicated parameter names.
     pub(super) fn deduplicate_recovered_params_names(&self, fn_inputs: &mut Vec<Param>) {
-        let mut seen_inputs = FxHashSet::default();
+        let mut seen_inputs = fx_hash_set!();
         for input in fn_inputs.iter_mut() {
             let opt_ident = if let (PatKind::Ident(_, ident, _), TyKind::Err) =
                 (&input.pat.kind, &input.ty.kind)

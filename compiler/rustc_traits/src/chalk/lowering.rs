@@ -909,7 +909,7 @@ impl<'tcx> ParamsSubstitutor<'tcx> {
             binder_index: ty::INNERMOST,
             list: vec![],
             next_ty_placeholder,
-            params: rustc_data_structures::fx::FxHashMap::default(),
+            params: fx_hash_map!(),
             named_regions: BTreeMap::default(),
         }
     }

@@ -17,6 +17,6 @@ fn main() {
     //~^^ ERROR Prefer FxHashSet over HashSet, it has better performance
 
     // test that the lint doesn't also match the Fx variants themselves
-    let _fx_map: FxHashMap<String, String> = FxHashMap::default();
-    let _fx_set: FxHashSet<String> = FxHashSet::default();
+    let _fx_map: FxHashMap<String, String> = fx_hash_map!();
+    let _fx_set: FxHashSet<String> = fx_hash_set!();
 }

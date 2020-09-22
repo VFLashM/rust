@@ -646,7 +646,7 @@ impl FirstSets {
     fn new(tts: &[mbe::TokenTree]) -> FirstSets {
         use mbe::TokenTree;
 
-        let mut sets = FirstSets { first: FxHashMap::default() };
+        let mut sets = FirstSets { first: fx_hash_map!() };
         build_recur(&mut sets, tts);
         return sets;
 

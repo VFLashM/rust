@@ -22,6 +22,9 @@ use rustc_span::{edition::Edition, symbol::Symbol, Span};
 use std::fmt;
 use std::num::NonZeroU32;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 #[derive(Clone, Copy)]
 pub enum State {
     Accepted,

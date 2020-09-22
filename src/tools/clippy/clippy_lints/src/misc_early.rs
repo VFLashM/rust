@@ -371,7 +371,7 @@ impl EarlyLintPass for MiscEarlyLints {
     }
 
     fn check_fn(&mut self, cx: &EarlyContext<'_>, fn_kind: FnKind<'_>, _: Span, _: NodeId) {
-        let mut registered_names: FxHashMap<String, Span> = FxHashMap::default();
+        let mut registered_names: FxHashMap<String, Span> = fx_hash_map!();
 
         for arg in &fn_kind.decl().inputs {
             if let PatKind::Ident(_, ident, None) = arg.pat.kind {

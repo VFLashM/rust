@@ -491,7 +491,7 @@ fn returns_unit(decl: &hir::FnDecl<'_>) -> bool {
 }
 
 fn has_mutable_arg(cx: &LateContext<'_>, body: &hir::Body<'_>) -> bool {
-    let mut tys = FxHashSet::default();
+    let mut tys = fx_hash_set!();
     body.params.iter().any(|param| is_mutable_pat(cx, &param.pat, &mut tys))
 }
 
@@ -612,7 +612,7 @@ impl<'a, 'tcx> intravisit::Visitor<'tcx> for StaticMutVisitor<'a, 'tcx> {
         }
         match expr.kind {
             Call(_, args) | MethodCall(_, _, args, _) => {
-                let mut tys = FxHashSet::default();
+                let mut tys = fx_hash_set!();
                 for arg in args {
                     let def_id = arg.hir_id.owner.to_def_id();
                     if self.cx.tcx.has_typeck_results(def_id)

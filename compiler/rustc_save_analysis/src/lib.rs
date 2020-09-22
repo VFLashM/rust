@@ -3,6 +3,9 @@
 #![feature(or_patterns)]
 #![recursion_limit = "256"]
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 mod dump_visitor;
 mod dumper;
 #[macro_use]

@@ -4,7 +4,7 @@
 //! types computed here.
 
 use super::FnCtxt;
-use rustc_data_structures::fx::{FxHashSet, FxIndexSet};
+use rustc_data_structures::fx::FxIndexSet;
 use rustc_hir as hir;
 use rustc_hir::def::{CtorKind, DefKind, Res};
 use rustc_hir::def_id::DefId;
@@ -156,7 +156,7 @@ pub fn resolve_interior<'a, 'tcx>(
     debug!("types in generator {:?}, span = {:?}", types, body.value.span);
 
     let mut counter = 0;
-    let mut captured_tys = FxHashSet::default();
+    let mut captured_tys = fx_hash_set!();
     let type_causes: Vec<_> = types
         .into_iter()
         .filter_map(|mut cause| {

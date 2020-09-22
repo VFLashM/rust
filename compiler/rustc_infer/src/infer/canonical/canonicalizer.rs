@@ -517,7 +517,7 @@ impl<'cx, 'tcx> Canonicalizer<'cx, 'tcx> {
             needs_canonical_flags,
             variables: SmallVec::new(),
             query_state,
-            indices: FxHashMap::default(),
+            indices: fx_hash_map!(),
             binder_index: ty::INNERMOST,
         };
         let out_value = value.fold_with(&mut canonicalizer);

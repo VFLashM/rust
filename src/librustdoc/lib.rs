@@ -19,6 +19,9 @@ extern crate lazy_static;
 #[macro_use]
 extern crate tracing;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 // N.B. these need `extern crate` even in 2018 edition
 // because they're loaded implicitly from the sysroot.
 // The reason they're loaded from the sysroot is because
@@ -29,7 +32,6 @@ extern crate tracing;
 extern crate rustc_ast;
 extern crate rustc_ast_pretty;
 extern crate rustc_attr;
-extern crate rustc_data_structures;
 extern crate rustc_driver;
 extern crate rustc_errors;
 extern crate rustc_expand;

@@ -13,7 +13,7 @@ use std::fmt;
 use std::ptr;
 
 use rustc_ast::Mutability;
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashMap;
 use rustc_middle::ty::{Instance, ParamEnv, TyCtxt};
 use rustc_target::abi::{Align, HasDataLayout, Size, TargetDataLayout};
 
@@ -129,8 +129,8 @@ impl<'mir, 'tcx, M: Machine<'mir, 'tcx>> Memory<'mir, 'tcx, M> {
     pub fn new(tcx: TyCtxt<'tcx>, extra: M::MemoryExtra) -> Self {
         Memory {
             alloc_map: M::MemoryMap::default(),
-            extra_fn_ptr_map: FxHashMap::default(),
-            dead_alloc_map: FxHashMap::default(),
+            extra_fn_ptr_map: fx_hash_map!(),
+            dead_alloc_map: fx_hash_map!(),
             extra,
             tcx,
         }
@@ -679,7 +679,7 @@ impl<'mir, 'tcx, M: Machine<'mir, 'tcx>> Memory<'mir, 'tcx, M> {
     pub fn leak_report(&self, static_roots: &[AllocId]) -> usize {
         // Collect the set of allocations that are *reachable* from `Global` allocations.
         let reachable = {
-            let mut reachable = FxHashSet::default();
+            let mut reachable = fx_hash_set!();
             let global_kind = M::GLOBAL_KIND.map(MemoryKind::Machine);
             let mut todo: Vec<_> = self.alloc_map.filter_map_collect(move |&id, &(kind, _)| {
                 if Some(kind) == global_kind { Some(id) } else { None }
@@ -737,7 +737,7 @@ impl<'a, 'mir, 'tcx, M: Machine<'mir, 'tcx>> std::fmt::Debug for DumpAllocs<'a, 
 
         let mut allocs_to_print: VecDeque<_> = self.allocs.iter().copied().collect();
         // `allocs_printed` contains all allocations that we have already printed.
-        let mut allocs_printed = FxHashSet::default();
+        let mut allocs_printed = fx_hash_set!();
 
         while let Some(id) = allocs_to_print.pop_front() {
             if !allocs_printed.insert(id) {

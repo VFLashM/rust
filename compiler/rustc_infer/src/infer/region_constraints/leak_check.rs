@@ -387,7 +387,7 @@ impl<'tcx> MiniGraph<'tcx> {
     where
         'tcx: 'a,
     {
-        let mut nodes = FxHashMap::default();
+        let mut nodes = fx_hash_map!();
         let mut edges = Vec::new();
 
         // Note that if `R2: R1`, we get a callback `r1, r2`, so `target` is first parameter.

@@ -1793,7 +1793,7 @@ fn opaque_type_cycle_error(tcx: TyCtxt<'tcx>, def_id: LocalDefId, span: Span) {
             }
             err.help("this error will resolve once the item's body returns a concrete type");
         } else {
-            let mut seen = FxHashSet::default();
+            let mut seen = fx_hash_set!();
             seen.insert(span);
             err.span_label(span, "recursive opaque type");
             label = true;
@@ -2412,7 +2412,7 @@ fn bounds_from_generic_predicates<'tcx>(
     tcx: TyCtxt<'tcx>,
     predicates: ty::GenericPredicates<'tcx>,
 ) -> (String, String) {
-    let mut types: FxHashMap<Ty<'tcx>, Vec<DefId>> = FxHashMap::default();
+    let mut types: FxHashMap<Ty<'tcx>, Vec<DefId>> = fx_hash_map!();
     let mut projections = vec![];
     for (predicate, _) in predicates.predicates {
         debug!("predicate {:?}", predicate);
@@ -5673,7 +5673,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
         // to add defaults. If the user provided *too many* types, that's
         // a problem.
 
-        let mut infer_args_for_err = FxHashSet::default();
+        let mut infer_args_for_err = fx_hash_set!();
         for &PathSeg(def_id, index) in &path_segs {
             let seg = &segments[index];
             let generics = tcx.generics_of(def_id);

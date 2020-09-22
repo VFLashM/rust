@@ -350,7 +350,7 @@ fn bindings<'tcx>(cx: &LateContext<'tcx>, pat: &Pat<'_>) -> FxHashMap<Symbol, Ty
         }
     }
 
-    let mut result = FxHashMap::default();
+    let mut result = fx_hash_map!();
     bindings_impl(cx, pat, &mut result);
     result
 }

@@ -194,7 +194,7 @@ impl<'tcx> ReachableContext<'tcx> {
 
     // Step 2: Mark all symbols that the symbols on the worklist touch.
     fn propagate(&mut self) {
-        let mut scanned = FxHashSet::default();
+        let mut scanned = fx_hash_set!();
         while let Some(search_item) = self.worklist.pop() {
             if !scanned.insert(search_item) {
                 continue;

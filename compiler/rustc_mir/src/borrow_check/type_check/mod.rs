@@ -984,7 +984,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
             borrowck_context,
             reported_errors: Default::default(),
             universal_region_relations,
-            opaque_type_values: FxHashMap::default(),
+            opaque_type_values: fx_hash_map!(),
         };
         checker.check_user_type_annotations();
         checker

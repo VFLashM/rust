@@ -660,7 +660,7 @@ impl<'a, 'b> ImportResolver<'a, 'b> {
             self.finalize_resolutions_in(module);
         }
 
-        let mut seen_spans = FxHashSet::default();
+        let mut seen_spans = fx_hash_set!();
         let mut errors = vec![];
         let mut prev_root_id: NodeId = NodeId::from_u32(0);
         let determined_imports = mem::take(&mut self.r.determined_imports);

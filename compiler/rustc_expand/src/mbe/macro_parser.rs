@@ -392,7 +392,7 @@ fn nameize<I: Iterator<Item = NamedMatch>>(
         Ok(())
     }
 
-    let mut ret_val = FxHashMap::default();
+    let mut ret_val = fx_hash_map!();
     for m in ms {
         match n_rec(sess, m, res.by_ref(), &mut ret_val) {
             Ok(_) => {}

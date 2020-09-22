@@ -91,7 +91,7 @@ impl<'a, 'b> UnusedImportCheckVisitor<'a, 'b> {
             use_tree,
             use_tree_id,
             item_span,
-            unused: FxHashSet::default(),
+            unused: fx_hash_set!(),
         })
     }
 }

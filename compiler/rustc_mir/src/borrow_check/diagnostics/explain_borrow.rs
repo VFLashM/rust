@@ -386,7 +386,7 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
     /// Returns the outmost back edge if `from` location can reach `to` location passing through
     /// that back edge
     fn reach_through_backedge(&self, from: Location, to: Location) -> Option<Location> {
-        let mut visited_locations = FxHashSet::default();
+        let mut visited_locations = fx_hash_set!();
         let mut pending_locations = VecDeque::new();
         visited_locations.insert(from);
         pending_locations.push_back(from);
@@ -449,7 +449,7 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
     /// true if `from` location can reach `loop_head` location and `loop_head` dominates all the
     /// intermediate nodes
     fn can_reach_head_of_loop(&self, from: Location, loop_head: Location) -> bool {
-        self.find_loop_head_dfs(from, loop_head, &mut FxHashSet::default())
+        self.find_loop_head_dfs(from, loop_head, &mut fx_hash_set!())
     }
 
     fn find_loop_head_dfs(

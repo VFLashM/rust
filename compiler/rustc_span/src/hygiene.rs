@@ -174,7 +174,7 @@ impl HygieneData {
                 opaque_and_semitransparent: SyntaxContext(0),
                 dollar_crate_name: kw::DollarCrate,
             }],
-            syntax_context_map: FxHashMap::default(),
+            syntax_context_map: fx_hash_map!(),
         }
     }
 
@@ -369,7 +369,7 @@ impl HygieneData {
 }
 
 pub fn clear_syntax_context_map() {
-    HygieneData::with(|data| data.syntax_context_map = FxHashMap::default());
+    HygieneData::with(|data| data.syntax_context_map = fx_hash_map!());
 }
 
 pub fn walk_chain(span: Span, to: SyntaxContext) -> Span {

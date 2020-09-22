@@ -41,7 +41,7 @@ pub fn krate(mut cx: &mut DocContext<'_>) -> Crate {
     // Clean the crate, translating the entire librustc_ast AST to one that is
     // understood by rustdoc.
     let mut module = module.clean(cx);
-    let mut masked_crates = FxHashSet::default();
+    let mut masked_crates = fx_hash_set!();
 
     match module.inner {
         ItemEnum::ModuleItem(ref module) => {
@@ -189,7 +189,7 @@ pub fn get_real_types(
     recurse: i32,
 ) -> FxHashSet<(Type, TypeKind)> {
     let arg_s = arg.print().to_string();
-    let mut res = FxHashSet::default();
+    let mut res = fx_hash_set!();
     if recurse >= 10 {
         // FIXME: remove this whole recurse thing when the recursion bug is fixed
         return res;
@@ -265,7 +265,7 @@ pub fn get_all_types(
     decl: &FnDecl,
     cx: &DocContext<'_>,
 ) -> (Vec<(Type, TypeKind)>, Vec<(Type, TypeKind)>) {
-    let mut all_types = FxHashSet::default();
+    let mut all_types = fx_hash_set!();
     for arg in decl.inputs.values.iter() {
         if arg.type_.is_self_type() {
             continue;

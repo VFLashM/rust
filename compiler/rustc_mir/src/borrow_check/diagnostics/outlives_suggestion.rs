@@ -3,7 +3,6 @@
 
 use std::collections::BTreeMap;
 
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::DiagnosticBuilder;
 use rustc_middle::ty::RegionVid;
 use tracing::debug;
@@ -89,7 +88,7 @@ impl OutlivesSuggestionBuilder {
 
         // Keep track of variables that we have already suggested unifying so that we don't print
         // out silly duplicate messages.
-        let mut unified_already = FxHashSet::default();
+        let mut unified_already = fx_hash_set!();
 
         for (fr, outlived) in &self.constraints_to_add {
             let fr_name = if let Some(fr_name) = self.region_vid_to_name(mbcx, *fr) {

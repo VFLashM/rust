@@ -1,7 +1,6 @@
 use super::ObjectSafetyViolation;
 
 use crate::infer::InferCtxt;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder};
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
@@ -56,7 +55,7 @@ pub fn report_object_safety_error(
     );
     err.span_label(span, format!("the trait `{}` cannot be made into an object", trait_str));
 
-    let mut reported_violations = FxHashSet::default();
+    let mut reported_violations = fx_hash_set!();
     let mut had_span_label = false;
     for violation in violations {
         if let ObjectSafetyViolation::SizedSelf(sp) = &violation {

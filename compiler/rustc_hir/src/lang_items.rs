@@ -119,7 +119,7 @@ macro_rules! language_item_table {
 
         /// A mapping from the name of the lang item to its order and the form it must be of.
         pub static ITEM_REFS: SyncLazy<FxHashMap<Symbol, (usize, Target)>> = SyncLazy::new(|| {
-            let mut item_refs = FxHashMap::default();
+            let mut item_refs = fx_hash_map!();
             $( item_refs.insert($name, (LangItem::$variant as usize, $target)); )*
             item_refs
         });

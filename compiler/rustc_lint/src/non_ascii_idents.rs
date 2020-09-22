@@ -211,8 +211,7 @@ impl EarlyLintPass for NonAsciiIdents {
         }
 
         if has_non_ascii_idents && check_confusable_idents {
-            let mut skeleton_map: FxHashMap<Symbol, (Symbol, Span, bool)> =
-                FxHashMap::with_capacity_and_hasher(symbols.len(), Default::default());
+            let mut skeleton_map: FxHashMap<Symbol, (Symbol, Span, bool)> = fx_hash_map_with_capacity!(symbols.len());
             let mut skeleton_buf = String::new();
 
             for (&symbol, &sp) in symbols.iter() {
@@ -268,7 +267,7 @@ impl EarlyLintPass for NonAsciiIdents {
             }
 
             let mut script_states: FxHashMap<AugmentedScriptSet, ScriptSetUsage> =
-                FxHashMap::default();
+                fx_hash_map!();
             let latin_augmented_script_set = AugmentedScriptSet::for_char('A');
             script_states.insert(latin_augmented_script_set, ScriptSetUsage::Verified);
 

@@ -170,8 +170,8 @@ impl<'sess> OnDiskCache<'sess> {
             query_result_index: Default::default(),
             prev_diagnostics_index: Default::default(),
             alloc_decoding_state: AllocDecodingState::new(Vec::new()),
-            syntax_contexts: FxHashMap::default(),
-            expn_data: FxHashMap::default(),
+            syntax_contexts: fx_hash_map!(),
+            expn_data: fx_hash_map!(),
             hygiene_context: Default::default(),
         }
     }
@@ -185,10 +185,8 @@ impl<'sess> OnDiskCache<'sess> {
             // Allocate `SourceFileIndex`es.
             let (file_to_file_index, file_index_to_stable_id) = {
                 let files = tcx.sess.source_map().files();
-                let mut file_to_file_index =
-                    FxHashMap::with_capacity_and_hasher(files.len(), Default::default());
-                let mut file_index_to_stable_id =
-                    FxHashMap::with_capacity_and_hasher(files.len(), Default::default());
+                let mut file_to_file_index = fx_hash_map_with_capacity!(files.len());
+                let mut file_index_to_stable_id = fx_hash_map_with_capacity!(files.len());
 
                 for (index, file) in files.iter().enumerate() {
                     let index = SourceFileIndex(index as u32);
@@ -290,8 +288,8 @@ impl<'sess> OnDiskCache<'sess> {
                 })
                 .collect();
 
-            let mut syntax_contexts = FxHashMap::default();
-            let mut expn_ids = FxHashMap::default();
+            let mut syntax_contexts = fx_hash_map!();
+            let mut expn_ids = fx_hash_map!();
 
             // Encode all hygiene data (`SyntaxContextData` and `ExpnData`) from the current
             // session.

@@ -55,7 +55,7 @@ pub(super) fn trace(
         elements,
         local_use_map,
         move_data,
-        drop_data: FxHashMap::default(),
+        drop_data: fx_hash_map!(),
     };
 
     let mut results = LivenessResults::new(cx);

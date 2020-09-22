@@ -984,8 +984,8 @@ impl ThinLTOImportMaps {
 
     fn load_from_file(path: &Path) -> io::Result<ThinLTOImportMaps> {
         use std::io::BufRead;
-        let mut imports = FxHashMap::default();
-        let mut exports: FxHashMap<_, Vec<_>> = FxHashMap::default();
+        let mut imports = fx_hash_map!();
+        let mut exports: FxHashMap<_, Vec<_>> = fx_hash_map!();
         let mut current_module: Option<String> = None;
         let mut current_imports: Vec<String> = vec![];
         let file = File::open(path)?;

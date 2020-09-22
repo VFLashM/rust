@@ -222,7 +222,7 @@ pub struct InliningMap<'tcx> {
 impl<'tcx> InliningMap<'tcx> {
     fn new() -> InliningMap<'tcx> {
         InliningMap {
-            index: FxHashMap::default(),
+            index: fx_hash_map!(),
             targets: Vec::new(),
             inlines: GrowableBitSet::with_capacity(1024),
         }
@@ -284,7 +284,7 @@ pub fn collect_crate_mono_items(
 
     debug!("building mono item graph, beginning at roots");
 
-    let mut visited = MTLock::new(FxHashSet::default());
+    let mut visited = MTLock::new(fx_hash_set!());
     let mut inlining_map = MTLock::new(InliningMap::new());
 
     {

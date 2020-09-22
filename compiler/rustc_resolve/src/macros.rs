@@ -105,7 +105,7 @@ fn registered_idents(
     attr_name: Symbol,
     descr: &str,
 ) -> FxHashSet<Ident> {
-    let mut registered = FxHashSet::default();
+    let mut registered = fx_hash_set!();
     for attr in sess.filter_by_name(attrs, attr_name) {
         for nested_meta in attr.meta_item_list().unwrap_or_default() {
             match nested_meta.ident() {

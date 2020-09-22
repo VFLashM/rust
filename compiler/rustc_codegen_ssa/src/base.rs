@@ -612,7 +612,7 @@ pub fn codegen_crate<B: ExtraBackendMethods>(
                     .collect()
             })
         } else {
-            FxHashMap::default()
+            fx_hash_map!()
         }
     };
 

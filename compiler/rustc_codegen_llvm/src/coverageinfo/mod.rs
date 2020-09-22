@@ -37,7 +37,7 @@ impl<'tcx> CrateCoverageContext<'tcx> {
     }
 
     pub fn take_function_coverage_map(&self) -> FxHashMap<Instance<'tcx>, FunctionCoverage> {
-        self.function_coverage_map.replace(FxHashMap::default())
+        self.function_coverage_map.replace(fx_hash_map!())
     }
 }
 

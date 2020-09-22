@@ -577,11 +577,9 @@ impl<'tcx> TyCtxt<'tcx> {
         H: FnMut(ty::BoundVar, Ty<'tcx>) -> &'tcx ty::Const<'tcx>,
         T: TypeFoldable<'tcx>,
     {
-        use rustc_data_structures::fx::FxHashMap;
-
         let mut region_map = BTreeMap::new();
-        let mut type_map = FxHashMap::default();
-        let mut const_map = FxHashMap::default();
+        let mut type_map = fx_hash_map!();
+        let mut const_map = fx_hash_map!();
 
         if !value.has_escaping_bound_vars() {
             (value.clone(), region_map)

@@ -154,7 +154,7 @@ impl<'tcx> MarkSymbolVisitor<'tcx> {
     }
 
     fn mark_live_symbols(&mut self) {
-        let mut scanned = FxHashSet::default();
+        let mut scanned = fx_hash_set!();
         while let Some(id) = self.worklist.pop() {
             if !scanned.insert(id) {
                 continue;

@@ -479,7 +479,7 @@ impl<'a, 'tcx> PossibleBorrowerVisitor<'a, 'tcx> {
         cx: &LateContext<'tcx>,
         maybe_live: ResultsCursor<'tcx, 'tcx, MaybeStorageLive>,
     ) -> PossibleBorrowerMap<'a, 'tcx> {
-        let mut map = FxHashMap::default();
+        let mut map = fx_hash_map!();
         for row in (1..self.body.local_decls.len()).map(mir::Local::from_usize) {
             if is_copy(cx, self.body.local_decls[row].ty) {
                 continue;

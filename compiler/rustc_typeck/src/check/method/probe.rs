@@ -527,7 +527,7 @@ impl<'a, 'tcx> ProbeContext<'a, 'tcx> {
             return_type,
             inherent_candidates: Vec::new(),
             extension_candidates: Vec::new(),
-            impl_dups: FxHashSet::default(),
+            impl_dups: fx_hash_set!(),
             orig_steps_var_values,
             steps,
             static_candidates: Vec::new(),
@@ -872,7 +872,7 @@ impl<'a, 'tcx> ProbeContext<'a, 'tcx> {
         &mut self,
         expr_hir_id: hir::HirId,
     ) -> Result<(), MethodError<'tcx>> {
-        let mut duplicates = FxHashSet::default();
+        let mut duplicates = fx_hash_set!();
         let opt_applicable_traits = self.tcx.in_scope_traits(expr_hir_id);
         if let Some(applicable_traits) = opt_applicable_traits {
             for trait_candidate in applicable_traits.iter() {
@@ -890,7 +890,7 @@ impl<'a, 'tcx> ProbeContext<'a, 'tcx> {
     }
 
     fn assemble_extension_candidates_for_all_traits(&mut self) -> Result<(), MethodError<'tcx>> {
-        let mut duplicates = FxHashSet::default();
+        let mut duplicates = fx_hash_set!();
         for trait_info in suggest::all_traits(self.tcx) {
             if duplicates.insert(trait_info.def_id) {
                 self.assemble_extension_candidates_for_trait(&smallvec![], trait_info.def_id)?;
@@ -986,7 +986,7 @@ impl<'a, 'tcx> ProbeContext<'a, 'tcx> {
     }
 
     fn candidate_method_names(&self) -> Vec<Ident> {
-        let mut set = FxHashSet::default();
+        let mut set = fx_hash_set!();
         let mut names: Vec<_> = self
             .inherent_candidates
             .iter()

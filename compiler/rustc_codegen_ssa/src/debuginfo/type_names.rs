@@ -15,7 +15,7 @@ pub fn compute_debuginfo_type_name<'tcx>(
     qualified: bool,
 ) -> String {
     let mut result = String::with_capacity(64);
-    let mut visited = FxHashSet::default();
+    let mut visited = fx_hash_set!();
     push_debuginfo_type_name(tcx, t, qualified, &mut result, &mut visited);
     result
 }

@@ -13,7 +13,7 @@ macro_rules! weak_lang_items {
     ($($name:ident, $item:ident, $sym:ident;)*) => (
 
 pub static WEAK_ITEMS_REFS: SyncLazy<FxHashMap<Symbol, LangItem>> = SyncLazy::new(|| {
-    let mut map = FxHashMap::default();
+    let mut map = fx_hash_map!();
     $(map.insert(sym::$name, LangItem::$item);)*
     map
 });

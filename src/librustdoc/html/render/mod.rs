@@ -710,7 +710,7 @@ fn write_shared(
 
     // To avoid "light.css" to be overwritten, we'll first run over the received themes and only
     // then we'll run over the "official" styles.
-    let mut themes: FxHashSet<String> = FxHashSet::default();
+    let mut themes: FxHashSet<String> = fx_hash_set!();
 
     for entry in &cx.shared.style_files {
         let theme = try_none!(try_none!(entry.path.file_stem(), &entry.path).to_str(), &entry.path);
@@ -946,7 +946,7 @@ themePicker.onblur = handleThemeButtonsBlur;
 
     impl Hierarchy {
         fn new(elem: OsString) -> Hierarchy {
-            Hierarchy { elem, children: FxHashMap::default(), elems: FxHashSet::default() }
+            Hierarchy { elem, children: fx_hash_map!(), elems: fx_hash_set!() }
         }
 
         fn to_json_string(&self) -> String {
@@ -1244,7 +1244,7 @@ struct AllTypes {
 
 impl AllTypes {
     fn new() -> AllTypes {
-        let new_set = |cap| FxHashSet::with_capacity_and_hasher(cap, Default::default());
+        let new_set = |cap| fx_hash_set_with_capacity!(cap);
         AllTypes {
             structs: new_set(100),
             enums: new_set(100),
@@ -2585,7 +2585,7 @@ fn item_trait(w: &mut Buffer, cx: &Context, it: &clean::Item, t: &clean::Trait, 
     if let Some(implementors) = cache.implementors.get(&it.def_id) {
         // The DefId is for the first Type found with that name. The bool is
         // if any Types with the same name but different DefId have been found.
-        let mut implementor_dups: FxHashMap<&str, (DefId, bool)> = FxHashMap::default();
+        let mut implementor_dups: FxHashMap<&str, (DefId, bool)> = fx_hash_map!();
         for implementor in implementors {
             match implementor.inner_impl().for_ {
                 clean::ResolvedPath { ref path, did, is_generic: false, .. }
@@ -3484,7 +3484,7 @@ fn spotlight_decl(decl: &clean::FnDecl) -> String {
                                 it,
                                 &[],
                                 Some(&tydef.type_),
-                                AssocItemLink::GotoSource(t_did, &FxHashSet::default()),
+                                AssocItemLink::GotoSource(t_did, &fx_hash_set!()),
                                 "",
                             );
                             out.push_str(";</span>");
@@ -4028,7 +4028,7 @@ fn sidebar_assoc_items(it: &clean::Item) -> String {
     let mut out = String::new();
     let c = cache();
     if let Some(v) = c.impls.get(&it.def_id) {
-        let mut used_links = FxHashSet::default();
+        let mut used_links = fx_hash_set!();
 
         {
             let used_links_bor = &mut used_links;
@@ -4103,7 +4103,7 @@ fn sidebar_assoc_items(it: &clean::Item) -> String {
                 }
             }
             let format_impls = |impls: Vec<&Impl>| {
-                let mut links = FxHashSet::default();
+                let mut links = fx_hash_set!();
 
                 let mut ret = impls
                     .iter()
@@ -4556,7 +4556,7 @@ fn make_item_keywords(it: &clean::Item) -> String {
 /// picked up the impl
 fn collect_paths_for_type(first_ty: clean::Type) -> Vec<String> {
     let mut out = Vec::new();
-    let mut visited = FxHashSet::default();
+    let mut visited = fx_hash_set!();
     let mut work = VecDeque::new();
     let cache = cache();
 

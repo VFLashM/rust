@@ -557,8 +557,8 @@ impl<'tcx> TyCtxt<'tcx> {
         substs: SubstsRef<'tcx>,
     ) -> Result<Ty<'tcx>, Ty<'tcx>> {
         let mut visitor = OpaqueTypeExpander {
-            seen_opaque_tys: FxHashSet::default(),
-            expanded_cache: FxHashMap::default(),
+            seen_opaque_tys: fx_hash_set!(),
+            expanded_cache: fx_hash_map!(),
             primary_def_id: Some(def_id),
             found_recursion: false,
             check_recursion: true,
@@ -1004,7 +1004,7 @@ impl<'tcx> ty::TyS<'tcx> {
         // contains a different, structurally recursive type, maintain a stack
         // of seen types and check recursion for each of them (issues #3008, #3779).
         let mut seen: Vec<Ty<'_>> = Vec::new();
-        let mut representable_cache = FxHashMap::default();
+        let mut representable_cache = fx_hash_map!();
         let r = is_type_structurally_recursive(tcx, sp, &mut seen, &mut representable_cache, self);
         debug!("is_type_representable: {:?} is {:?}", self, r);
         r
@@ -1151,8 +1151,8 @@ pub fn normalize_opaque_types(
     val: &'tcx List<ty::Predicate<'tcx>>,
 ) -> &'tcx List<ty::Predicate<'tcx>> {
     let mut visitor = OpaqueTypeExpander {
-        seen_opaque_tys: FxHashSet::default(),
-        expanded_cache: FxHashMap::default(),
+        seen_opaque_tys: fx_hash_set!(),
+        expanded_cache: fx_hash_map!(),
         primary_def_id: None,
         found_recursion: false,
         check_recursion: false,

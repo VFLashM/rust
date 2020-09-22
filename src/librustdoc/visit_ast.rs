@@ -46,14 +46,14 @@ pub struct RustdocVisitor<'a, 'tcx> {
 impl<'a, 'tcx> RustdocVisitor<'a, 'tcx> {
     pub fn new(cx: &'a mut core::DocContext<'tcx>) -> RustdocVisitor<'a, 'tcx> {
         // If the root is re-exported, terminate all recursion.
-        let mut stack = FxHashSet::default();
+        let mut stack = fx_hash_set!();
         stack.insert(hir::CRATE_HIR_ID);
         RustdocVisitor {
             cx,
             view_item_stack: stack,
             inlining: false,
             inside_public_path: true,
-            exact_paths: FxHashMap::default(),
+            exact_paths: fx_hash_map!(),
         }
     }
 

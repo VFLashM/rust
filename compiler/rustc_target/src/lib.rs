@@ -22,6 +22,9 @@ extern crate rustc_macros;
 #[macro_use]
 extern crate tracing;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 pub mod abi;
 pub mod asm;
 pub mod spec;

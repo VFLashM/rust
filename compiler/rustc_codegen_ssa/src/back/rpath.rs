@@ -1,5 +1,4 @@
 use pathdiff::diff_paths;
-use rustc_data_structures::fx::FxHashSet;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -121,7 +120,7 @@ fn get_install_prefix_rpath(config: &mut RPathConfig<'_>) -> String {
 }
 
 fn minimize_rpaths(rpaths: &[String]) -> Vec<String> {
-    let mut set = FxHashSet::default();
+    let mut set = fx_hash_set!();
     let mut minimized = Vec::new();
     for rpath in rpaths {
         if set.insert(rpath) {

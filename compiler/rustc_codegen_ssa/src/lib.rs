@@ -21,6 +21,9 @@ extern crate tracing;
 #[macro_use]
 extern crate rustc_middle;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::svh::Svh;
 use rustc_data_structures::sync::Lrc;

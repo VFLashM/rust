@@ -1114,7 +1114,7 @@ impl<'tcx> TyCtxt<'tcx> {
             None
         };
 
-        let mut trait_map: FxHashMap<_, FxHashMap<_, _>> = FxHashMap::default();
+        let mut trait_map: FxHashMap<_, FxHashMap<_, _>> = fx_hash_map!();
         for (hir_id, v) in krate.trait_map.iter() {
             let map = trait_map.entry(hir_id.owner).or_default();
             map.insert(hir_id.local_id, StableVec::new(v.to_vec()));

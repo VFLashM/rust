@@ -15,6 +15,9 @@
 #![feature(or_patterns)]
 #![recursion_limit = "256"]
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 pub use rustc_hir::def::{Namespace, PerNS};
 
 use Determinacy::*;
@@ -838,7 +841,7 @@ struct PrimitiveTypeTable {
 
 impl PrimitiveTypeTable {
     fn new() -> PrimitiveTypeTable {
-        let mut table = FxHashMap::default();
+        let mut table = fx_hash_map!();
 
         table.insert(sym::bool, Bool);
         table.insert(sym::char, Char);
@@ -1215,7 +1218,7 @@ impl<'a> Resolver<'a> {
                 DUMMY_SP,
             )
         });
-        let mut module_map = FxHashMap::default();
+        let mut module_map = fx_hash_map!();
         module_map.insert(LocalDefId { local_def_index: CRATE_DEF_INDEX }, graph_root);
 
         let definitions = Definitions::new(crate_name, session.local_crate_disambiguator());
@@ -1225,10 +1228,10 @@ impl<'a> Resolver<'a> {
         assert_eq!(def_id_to_span.push(rustc_span::DUMMY_SP), root);
         let mut def_id_to_node_id = IndexVec::default();
         assert_eq!(def_id_to_node_id.push(CRATE_NODE_ID), root);
-        let mut node_id_to_def_id = FxHashMap::default();
+        let mut node_id_to_def_id = fx_hash_map!();
         node_id_to_def_id.insert(CRATE_NODE_ID, root);
 
-        let mut invocation_parents = FxHashMap::default();
+        let mut invocation_parents = fx_hash_map!();
         invocation_parents.insert(ExpnId::root(), root);
 
         let mut extern_prelude: FxHashMap<Ident, ExternPreludeEntry<'_>> = session
@@ -1252,7 +1255,7 @@ impl<'a> Resolver<'a> {
         let (registered_attrs, registered_tools) =
             macros::registered_attrs_and_tools(session, &krate.attrs);
 
-        let mut invocation_parent_scopes = FxHashMap::default();
+        let mut invocation_parent_scopes = fx_hash_map!();
         invocation_parent_scopes.insert(ExpnId::root(), ParentScope::module(graph_root));
 
         let features = session.features_untracked();
@@ -1270,8 +1273,8 @@ impl<'a> Resolver<'a> {
             prelude: None,
             extern_prelude,
 
-            has_self: FxHashSet::default(),
-            field_names: FxHashMap::default(),
+            has_self: fx_hash_set!(),
+            field_names: fx_hash_map!(),
 
             determined_imports: Vec::new(),
             indeterminate_imports: Vec::new(),
@@ -1285,19 +1288,19 @@ impl<'a> Resolver<'a> {
             import_res_map: Default::default(),
             label_res_map: Default::default(),
             extern_crate_map: Default::default(),
-            export_map: FxHashMap::default(),
+            export_map: fx_hash_map!(),
             trait_map: Default::default(),
             underscore_disambiguator: 0,
             empty_module,
             module_map,
             block_map: Default::default(),
-            extern_module_map: FxHashMap::default(),
-            binding_parent_modules: FxHashMap::default(),
-            ast_transform_scopes: FxHashMap::default(),
+            extern_module_map: fx_hash_map!(),
+            binding_parent_modules: fx_hash_map!(),
+            ast_transform_scopes: fx_hash_map!(),
 
             glob_map: Default::default(),
 
-            used_imports: FxHashSet::default(),
+            used_imports: fx_hash_set!(),
             maybe_unused_trait_imports: Default::default(),
             maybe_unused_extern_crates: Vec::new(),
 
@@ -1316,21 +1319,21 @@ impl<'a> Resolver<'a> {
             }),
 
             crate_loader: CrateLoader::new(session, metadata_loader, crate_name),
-            macro_names: FxHashSet::default(),
+            macro_names: fx_hash_set!(),
             builtin_macros: Default::default(),
             registered_attrs,
             registered_tools,
-            macro_use_prelude: FxHashMap::default(),
-            all_macros: FxHashMap::default(),
-            macro_map: FxHashMap::default(),
+            macro_use_prelude: fx_hash_map!(),
+            all_macros: fx_hash_map!(),
+            macro_map: fx_hash_map!(),
             dummy_ext_bang: Lrc::new(SyntaxExtension::dummy_bang(session.edition())),
             dummy_ext_derive: Lrc::new(SyntaxExtension::dummy_derive(session.edition())),
             non_macro_attrs: [non_macro_attr(false), non_macro_attr(true)],
             invocation_parent_scopes,
             output_macro_rules_scopes: Default::default(),
             helper_attrs: Default::default(),
-            local_macro_def_scopes: FxHashMap::default(),
-            name_already_seen: FxHashMap::default(),
+            local_macro_def_scopes: fx_hash_map!(),
+            name_already_seen: fx_hash_map!(),
             potentially_unused_imports: Vec::new(),
             struct_constructors: Default::default(),
             unused_macros: Default::default(),
@@ -2832,7 +2835,7 @@ impl<'a> Resolver<'a> {
             self.report_ambiguity_error(ambiguity_error);
         }
 
-        let mut reported_spans = FxHashSet::default();
+        let mut reported_spans = fx_hash_set!();
         for error in &self.privacy_errors {
             if reported_spans.insert(error.dedup_span) {
                 self.report_privacy_error(error);

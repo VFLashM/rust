@@ -226,7 +226,7 @@ where
             node_stack: Vec::with_capacity(num_nodes),
             successors_stack: Vec::new(),
             scc_data: SccData { ranges: IndexVec::new(), all_successors: Vec::new() },
-            duplicate_set: FxHashSet::default(),
+            duplicate_set: fx_hash_set!(),
         };
 
         let scc_indices = (0..num_nodes)

@@ -15,7 +15,6 @@ use specialization_graph::GraphExt;
 use crate::infer::{InferCtxt, InferOk, TyCtxtInferExt};
 use crate::traits::select::IntercrateAmbiguityCause;
 use crate::traits::{self, coherence, FutureCompatOverlapErrorKind, ObligationCause, TraitEngine};
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_middle::lint::LintDiagnosticBuilder;
@@ -471,7 +470,7 @@ fn to_pretty_impl_header(tcx: TyCtxt<'_>, impl_def_id: DefId) -> Option<String> 
 
     // FIXME: Currently only handles ?Sized.
     //        Needs to support ?Move and ?DynSized when they are implemented.
-    let mut types_without_default_bounds = FxHashSet::default();
+    let mut types_without_default_bounds = fx_hash_set!();
     let sized_trait = tcx.lang_items().sized_trait();
 
     if !substs.is_noop() {

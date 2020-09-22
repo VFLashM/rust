@@ -68,7 +68,7 @@ impl<'s> LintLevelsBuilder<'s> {
     }
 
     fn process_command_line(&mut self, sess: &Session, store: &LintStore) {
-        let mut specs = FxHashMap::default();
+        let mut specs = fx_hash_map!();
         self.sets.lint_cap = sess.opts.lint_cap.unwrap_or(Level::Forbid);
 
         for &(ref lint_name, level) in &sess.opts.lint_opts {
@@ -115,7 +115,7 @@ impl<'s> LintLevelsBuilder<'s> {
         store: &LintStore,
         is_crate_node: bool,
     ) -> BuilderPush {
-        let mut specs = FxHashMap::default();
+        let mut specs = fx_hash_map!();
         let sess = self.sess;
         let bad_attr = |span| struct_span_err!(sess, span, E0452, "malformed lint attribute input");
         for attr in attrs {

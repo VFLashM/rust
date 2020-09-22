@@ -7,6 +7,9 @@
 #![feature(bindings_after_at)]
 #![feature(iter_is_partitioned)]
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 pub mod ast_validation;
 pub mod feature_gate;
 pub mod node_count;

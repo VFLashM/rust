@@ -3,7 +3,7 @@
 
 use crate::check::FnCtxt;
 use rustc_ast::util::lev_distance;
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{pluralize, struct_span_err, Applicability, DiagnosticBuilder};
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Namespace, Res};
@@ -576,7 +576,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                     let def_span = |def_id| {
                         self.tcx.sess.source_map().guess_head_span(self.tcx.def_span(def_id))
                     };
-                    let mut type_params = FxHashMap::default();
+                    let mut type_params = fx_hash_map!();
                     let mut bound_spans = vec![];
 
                     let mut collect_type_param_suggestions =
@@ -603,7 +603,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                                             };
                                             type_params
                                                 .entry(key)
-                                                .or_insert_with(FxHashSet::default)
+                                                .or_insert(fx_hash_set!())
                                                 .insert(obligation.to_owned());
                                         }
                                     }
@@ -1342,7 +1342,7 @@ fn compute_all_traits(tcx: TyCtxt<'_>) -> Vec<DefId> {
 
     // Cross-crate:
 
-    let mut external_mods = FxHashSet::default();
+    let mut external_mods = fx_hash_set!();
     fn handle_external_res(
         tcx: TyCtxt<'_>,
         traits: &mut Vec<DefId>,

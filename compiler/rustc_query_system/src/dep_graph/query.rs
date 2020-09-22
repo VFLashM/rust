@@ -13,7 +13,7 @@ pub struct DepGraphQuery<K> {
 impl<K: DepKind> DepGraphQuery<K> {
     pub fn new(nodes: &[DepNode<K>], edges: &[(DepNode<K>, DepNode<K>)]) -> DepGraphQuery<K> {
         let mut graph = Graph::with_capacity(nodes.len(), edges.len());
-        let mut indices = FxHashMap::default();
+        let mut indices = fx_hash_map!();
         for node in nodes {
             indices.insert(*node, graph.add_node(*node));
         }

@@ -26,10 +26,10 @@ impl<'tcx> Partitioner<'tcx> for DefaultPartitioning {
         cx: &PartitioningCx<'_, 'tcx>,
         mono_items: &mut dyn Iterator<Item = MonoItem<'tcx>>,
     ) -> PreInliningPartitioning<'tcx> {
-        let mut roots = FxHashSet::default();
-        let mut codegen_units = FxHashMap::default();
+        let mut roots = fx_hash_set!();
+        let mut codegen_units = fx_hash_map!();
         let is_incremental_build = cx.tcx.sess.opts.incremental.is_some();
-        let mut internalization_candidates = FxHashSet::default();
+        let mut internalization_candidates = fx_hash_set!();
 
         // Determine if monomorphizations instantiated in this crate will be made
         // available to downstream crates. This depends on whether we are in
@@ -39,7 +39,7 @@ impl<'tcx> Partitioner<'tcx> for DefaultPartitioning {
             cx.tcx.sess.opts.share_generics() && cx.tcx.local_crate_exports_generics();
 
         let cgu_name_builder = &mut CodegenUnitNameBuilder::new(cx.tcx);
-        let cgu_name_cache = &mut FxHashMap::default();
+        let cgu_name_cache = &mut fx_hash_map!();
 
         for mono_item in mono_items {
             match mono_item.instantiation_mode(cx.tcx) {
@@ -111,7 +111,7 @@ impl<'tcx> Partitioner<'tcx> for DefaultPartitioning {
         initial_partitioning: PreInliningPartitioning<'tcx>,
     ) -> PostInliningPartitioning<'tcx> {
         let mut new_partitioning = Vec::new();
-        let mut mono_item_placements = FxHashMap::default();
+        let mut mono_item_placements = fx_hash_map!();
 
         let PreInliningPartitioning {
             codegen_units: initial_cgus,
@@ -123,7 +123,7 @@ impl<'tcx> Partitioner<'tcx> for DefaultPartitioning {
 
         for old_codegen_unit in initial_cgus {
             // Collect all items that need to be available in this codegen unit.
-            let mut reachable = FxHashSet::default();
+            let mut reachable = fx_hash_set!();
             for root in old_codegen_unit.items().keys() {
                 follow_inlining(*root, cx.inlining_map, &mut reachable);
             }

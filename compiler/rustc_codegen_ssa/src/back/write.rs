@@ -481,7 +481,7 @@ fn copy_all_cgu_workproducts_to_incr_comp_cache_dir(
     sess: &Session,
     compiled_modules: &CompiledModules,
 ) -> FxHashMap<WorkProductId, WorkProduct> {
-    let mut work_products = FxHashMap::default();
+    let mut work_products = fx_hash_map!();
 
     if sess.opts.incremental.is_none() {
         return work_products;
@@ -955,7 +955,7 @@ fn start_executing_work<B: ExtraBackendMethods>(
 
     // Compute the set of symbols we need to retain when doing LTO (if we need to)
     let exported_symbols = {
-        let mut exported_symbols = FxHashMap::default();
+        let mut exported_symbols = fx_hash_map!();
 
         let copy_symbols = |cnum| {
             let symbols = tcx

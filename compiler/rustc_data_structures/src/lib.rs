@@ -70,6 +70,7 @@ pub mod box_region;
 pub mod captures;
 pub mod const_cstr;
 pub mod flock;
+#[macro_use]
 pub mod fx;
 pub mod graph;
 pub mod jobserver;

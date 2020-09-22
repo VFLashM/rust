@@ -749,7 +749,7 @@ pub fn default_configuration(sess: &Session) -> CrateConfig {
     let max_atomic_width = sess.target.target.max_atomic_width();
     let atomic_cas = sess.target.target.options.atomic_cas;
 
-    let mut ret = FxHashSet::default();
+    let mut ret = fx_hash_set!();
     ret.reserve(6); // the minimum number of insertions
     // Target bindings.
     ret.insert((sym::target_os, Some(Symbol::intern(os))));

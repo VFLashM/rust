@@ -25,7 +25,7 @@ impl DefaultHashTypes {
     // we are allowed to use `HashMap` and `HashSet` as identifiers for implementing the lint itself
     #[allow(rustc::default_hash_types)]
     pub fn new() -> Self {
-        let mut map = FxHashMap::default();
+        let mut map = fx_hash_map!();
         map.insert(sym::HashMap, sym::FxHashMap);
         map.insert(sym::HashSet, sym::FxHashSet);
         Self { map }

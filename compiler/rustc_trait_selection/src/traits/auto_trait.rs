@@ -114,7 +114,7 @@ impl<'tcx> AutoTraitFinder<'tcx> {
         }
 
         tcx.infer_ctxt().enter(|infcx| {
-            let mut fresh_preds = FxHashSet::default();
+            let mut fresh_preds = fx_hash_set!();
 
             // Due to the way projections are handled by SelectionContext, we need to run
             // evaluate_predicates twice: once on the original param env, and once on the result of
@@ -279,7 +279,7 @@ impl AutoTraitFinder<'tcx> {
 
         let mut select = SelectionContext::with_negative(&infcx, true);
 
-        let mut already_visited = FxHashSet::default();
+        let mut already_visited = fx_hash_set!();
         let mut predicates = VecDeque::new();
         predicates.push_back(ty::Binder::bind(ty::TraitPredicate {
             trait_ref: ty::TraitRef {
@@ -507,8 +507,8 @@ impl AutoTraitFinder<'tcx> {
         &self,
         regions: &RegionConstraintData<'cx>,
     ) -> FxHashMap<ty::RegionVid, ty::Region<'cx>> {
-        let mut vid_map: FxHashMap<RegionTarget<'cx>, RegionDeps<'cx>> = FxHashMap::default();
-        let mut finished_map = FxHashMap::default();
+        let mut vid_map: FxHashMap<RegionTarget<'cx>, RegionDeps<'cx>> = fx_hash_map!();
+        let mut finished_map = fx_hash_map!();
 
         for constraint in regions.constraints.keys() {
             match constraint {

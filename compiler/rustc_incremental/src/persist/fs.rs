@@ -217,7 +217,7 @@ pub fn prepare_session_directory(
         }
     };
 
-    let mut source_directories_already_tried = FxHashSet::default();
+    let mut source_directories_already_tried = fx_hash_set!();
 
     loop {
         // Generate a session directory of the form:
@@ -667,8 +667,8 @@ pub fn garbage_collect_session_directories(sess: &Session) -> io::Result<()> {
 
     // First do a pass over the crate directory, collecting lock files and
     // session directories
-    let mut session_directories = FxHashSet::default();
-    let mut lock_files = FxHashSet::default();
+    let mut session_directories = fx_hash_set!();
+    let mut lock_files = fx_hash_set!();
 
     for dir_entry in crate_directory.read_dir()? {
         let dir_entry = match dir_entry {
@@ -914,7 +914,7 @@ fn all_except_most_recent(
             .map(|(_, path, lock)| (path, lock))
             .collect()
     } else {
-        FxHashMap::default()
+        fx_hash_map!()
     }
 }
 

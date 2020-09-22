@@ -375,7 +375,7 @@ pub fn provide_extern(providers: &mut Providers) {
             .filter_map(|lib| lib.foreign_module.map(|id| (id, lib)))
             .collect::<FxHashMap<_, _>>();
 
-        let mut ret = FxHashMap::default();
+        let mut ret = fx_hash_map!();
         for lib in tcx.foreign_modules(cnum).iter() {
             let module = def_id_to_native_lib.get(&lib.def_id).and_then(|s| s.wasm_import_module);
             let module = match module {

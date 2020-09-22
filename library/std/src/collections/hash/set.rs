@@ -12,6 +12,8 @@ use crate::ops::{BitAnd, BitOr, BitXor, Sub};
 
 use super::map::{map_try_reserve_error, RandomState};
 
+use super::Dropper;
+
 // Future Optimization (FIXME!)
 // ============================
 //
@@ -111,6 +113,25 @@ use super::map::{map_try_reserve_error, RandomState};
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct HashSet<T, S = RandomState> {
     base: base::HashSet<T, S>,
+    dropper: Dropper,
+}
+
+impl<T, S> HashSet<T, S>
+    where S: BuildHasher + Default,
+{
+    /// doc
+    #[inline]
+    #[stable(feature = "rust1", since = "1.0.0")]
+    pub fn new_with_prof(fname: &'static str, line: u32) -> Self {
+        HashSet { base: base::HashSet::with_hasher(Default::default()), dropper: Dropper::new("set", fname, line) }
+    }
+
+    /// doc
+    #[inline]
+    #[stable(feature = "rust1", since = "1.0.0")]
+    pub fn with_capacity_and_prof(cap: usize, fname: &'static str, line: u32) -> Self {
+        HashSet { base: base::HashSet::with_capacity_and_hasher(cap, Default::default()), dropper: Dropper::new("set", fname, line) }
+    }
 }
 
 impl<T> HashSet<T, RandomState> {
@@ -146,7 +167,7 @@ impl<T> HashSet<T, RandomState> {
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn with_capacity(capacity: usize) -> HashSet<T, RandomState> {
-        HashSet { base: base::HashSet::with_capacity_and_hasher(capacity, Default::default()) }
+        HashSet { base: base::HashSet::with_capacity_and_hasher(capacity, Default::default()), dropper: Default::default() }
     }
 }
 
@@ -303,7 +324,8 @@ impl<T, S> HashSet<T, S> {
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn clear(&mut self) {
-        self.base.clear()
+        self.base.clear();
+        self.dropper.set(0);
     }
 
     /// Creates a new empty hash set which will use the given hasher to hash
@@ -332,7 +354,7 @@ impl<T, S> HashSet<T, S> {
     #[inline]
     #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
     pub fn with_hasher(hasher: S) -> HashSet<T, S> {
-        HashSet { base: base::HashSet::with_hasher(hasher) }
+        HashSet { base: base::HashSet::with_hasher(hasher), dropper: Default::default() }
     }
 
     /// Creates an empty `HashSet` with the specified capacity, using
@@ -362,7 +384,7 @@ impl<T, S> HashSet<T, S> {
     #[inline]
     #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
     pub fn with_capacity_and_hasher(capacity: usize, hasher: S) -> HashSet<T, S> {
-        HashSet { base: base::HashSet::with_capacity_and_hasher(capacity, hasher) }
+        HashSet { base: base::HashSet::with_capacity_and_hasher(capacity, hasher), dropper: Default::default() }
     }
 
     /// Returns a reference to the set's [`BuildHasher`].
@@ -670,6 +692,9 @@ where
     pub fn get_or_insert(&mut self, value: T) -> &T {
         // Although the raw entry gives us `&mut T`, we only return `&T` to be consistent with
         // `get`. Key mutation is "raw" because you're not supposed to affect `Eq` or `Hash`.
+        if !self.contains(&value) {
+            self.dropper.inc();
+        }
         self.base.get_or_insert(value)
     }
 
@@ -702,6 +727,9 @@ where
     {
         // Although the raw entry gives us `&mut T`, we only return `&T` to be consistent with
         // `get`. Key mutation is "raw" because you're not supposed to affect `Eq` or `Hash`.
+        if !self.contains(&value) {
+            self.dropper.inc();
+        }
         self.base.get_or_insert_owned(value)
     }
 
@@ -735,6 +763,9 @@ where
     {
         // Although the raw entry gives us `&mut T`, we only return `&T` to be consistent with
         // `get`. Key mutation is "raw" because you're not supposed to affect `Eq` or `Hash`.
+        if !self.contains(&value) {
+            self.dropper.inc();
+        }
         self.base.get_or_insert_with(value, f)
     }
 
@@ -832,7 +863,9 @@ where
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn insert(&mut self, value: T) -> bool {
-        self.base.insert(value)
+        let res = self.base.insert(value);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Adds a value to the set, replacing the existing value, if any, that is equal to the given
@@ -853,7 +886,9 @@ where
     #[inline]
     #[stable(feature = "set_recovery", since = "1.9.0")]
     pub fn replace(&mut self, value: T) -> Option<T> {
-        self.base.replace(value)
+        let res = self.base.replace(value);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Removes a value from the set. Returns whether the value was
@@ -881,7 +916,9 @@ where
         T: Borrow<Q>,
         Q: Hash + Eq,
     {
-        self.base.remove(value)
+        let res = self.base.remove(value);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Removes and returns the value in the set, if any, that is equal to the given one.
@@ -906,7 +943,9 @@ where
         T: Borrow<Q>,
         Q: Hash + Eq,
     {
-        self.base.take(value)
+        let res = self.base.take(value);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Retains only the elements specified by the predicate.
@@ -928,7 +967,9 @@ where
     where
         F: FnMut(&T) -> bool,
     {
-        self.base.retain(f)
+        let res = self.base.retain(f);
+        self.dropper.set(self.len());
+        res
     }
 }
 
@@ -988,11 +1029,13 @@ where
     #[inline]
     fn extend<I: IntoIterator<Item = T>>(&mut self, iter: I) {
         self.base.extend(iter);
+        self.dropper.set(self.len());
     }
 
     #[inline]
     fn extend_one(&mut self, item: T) {
         self.base.insert(item);
+        self.dropper.set(self.len());
     }
 
     #[inline]
@@ -1010,11 +1053,13 @@ where
     #[inline]
     fn extend<I: IntoIterator<Item = &'a T>>(&mut self, iter: I) {
         self.extend(iter.into_iter().cloned());
+        self.dropper.set(self.len());
     }
 
     #[inline]
     fn extend_one(&mut self, &item: &'a T) {
         self.base.insert(item);
+        self.dropper.set(self.len());
     }
 
     #[inline]
@@ -1031,7 +1076,7 @@ where
     /// Creates an empty `HashSet<T, S>` with the `Default` value for the hasher.
     #[inline]
     fn default() -> HashSet<T, S> {
-        HashSet { base: Default::default() }
+        HashSet { base: Default::default(), dropper: Default::default() }
     }
 }
 

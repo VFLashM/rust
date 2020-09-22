@@ -9,7 +9,6 @@ use std::borrow::Cow;
 use std::cell::Cell;
 use std::fmt;
 
-use rustc_data_structures::fx::FxHashSet;
 use rustc_hir as hir;
 use rustc_span::def_id::DefId;
 use rustc_target::spec::abi::Abi;
@@ -153,7 +152,7 @@ fn comma_sep<T: fmt::Display>(items: impl Iterator<Item = T>) -> impl fmt::Displ
 
 crate fn print_generic_bounds(bounds: &[clean::GenericBound]) -> impl fmt::Display + '_ {
     display_fn(move |f| {
-        let mut bounds_dup = FxHashSet::default();
+        let mut bounds_dup = fx_hash_set!();
 
         for (i, bound) in
             bounds.iter().filter(|b| bounds_dup.insert(b.print().to_string())).enumerate()

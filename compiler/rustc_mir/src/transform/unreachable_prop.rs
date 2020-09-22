@@ -4,7 +4,6 @@
 
 use crate::transform::simplify;
 use crate::transform::{MirPass, MirSource};
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_middle::mir::*;
 use rustc_middle::ty::TyCtxt;
 use std::borrow::Cow;
@@ -19,8 +18,8 @@ impl MirPass<'_> for UnreachablePropagation {
             return;
         }
 
-        let mut unreachable_blocks = FxHashSet::default();
-        let mut replacements = FxHashMap::default();
+        let mut unreachable_blocks = fx_hash_set!();
+        let mut replacements = fx_hash_map!();
 
         for (bb, bb_data) in traversal::postorder(body) {
             let terminator = bb_data.terminator();

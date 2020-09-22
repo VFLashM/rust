@@ -147,7 +147,7 @@ fn calculate_type(tcx: TyCtxt<'_>, ty: CrateType) -> DependencyList {
         }
     }
 
-    let mut formats = FxHashMap::default();
+    let mut formats = fx_hash_map!();
 
     // Sweep all crates for found dylibs. Add all dylibs, as well as their
     // dependencies, ensuring there are no conflicts. The only valid case for a

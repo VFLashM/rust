@@ -18,7 +18,6 @@ use crate::{
     pluralize, CodeSuggestion, Diagnostic, DiagnosticId, Level, SubDiagnostic, SuggestionStyle,
 };
 
-use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::sync::Lrc;
 use rustc_span::hygiene::{ExpnKind, MacroKind};
 use std::borrow::Cow;
@@ -1359,7 +1358,7 @@ impl EmitterWriter {
                 );
 
                 // Contains the vertical lines' positions for active multiline annotations
-                let mut multilines = FxHashMap::default();
+                let mut multilines = fx_hash_map!();
 
                 // Get the left-side margin to remove it
                 let mut whitespace_margin = usize::MAX;
@@ -1447,7 +1446,7 @@ impl EmitterWriter {
                         margin,
                     );
 
-                    let mut to_add = FxHashMap::default();
+                    let mut to_add = fx_hash_map!();
 
                     for (depth, style) in depths {
                         if multilines.get(&depth).is_some() {

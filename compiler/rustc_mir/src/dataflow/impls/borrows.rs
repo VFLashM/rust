@@ -62,7 +62,7 @@ fn precompute_borrows_out_of_scope<'tcx>(
     // `visited` once they are added to `stack`, before they are actually
     // processed, because this avoids the need to look them up again on
     // completion.
-    let mut visited = FxHashMap::default();
+    let mut visited = fx_hash_map!();
     visited.insert(location.block, location.statement_index);
 
     let mut stack = vec![];
@@ -135,7 +135,7 @@ impl<'a, 'tcx> Borrows<'a, 'tcx> {
         nonlexical_regioncx: Rc<RegionInferenceContext<'tcx>>,
         borrow_set: &Rc<BorrowSet<'tcx>>,
     ) -> Self {
-        let mut borrows_out_of_scope_at_location = FxHashMap::default();
+        let mut borrows_out_of_scope_at_location = fx_hash_map!();
         for (borrow_index, borrow_data) in borrow_set.iter_enumerated() {
             let borrow_region = borrow_data.region.to_region_vid();
             let location = borrow_data.reserve_location;

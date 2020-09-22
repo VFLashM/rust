@@ -94,7 +94,7 @@ fn is_mir_available(tcx: TyCtxt<'_>, def_id: DefId) -> bool {
 fn mir_keys(tcx: TyCtxt<'_>, krate: CrateNum) -> FxHashSet<LocalDefId> {
     assert_eq!(krate, LOCAL_CRATE);
 
-    let mut set = FxHashSet::default();
+    let mut set = fx_hash_set!();
 
     // All body-owners have MIR associated with them.
     set.extend(tcx.body_owners());

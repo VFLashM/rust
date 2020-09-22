@@ -592,7 +592,7 @@ pub fn is_builtin_attr_name(name: Symbol) -> bool {
 
 pub static BUILTIN_ATTRIBUTE_MAP: SyncLazy<FxHashMap<Symbol, &'static BuiltinAttribute>> =
     SyncLazy::new(|| {
-        let mut map = FxHashMap::default();
+        let mut map = fx_hash_map!();
         for attr in BUILTIN_ATTRIBUTES.iter() {
             if map.insert(attr.0, attr).is_some() {
                 panic!("duplicate builtin attribute `{}`", attr.0);

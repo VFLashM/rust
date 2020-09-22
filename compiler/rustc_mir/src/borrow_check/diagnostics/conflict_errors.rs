@@ -1,5 +1,4 @@
 use either::Either;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{Applicability, DiagnosticBuilder};
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
@@ -1418,7 +1417,7 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
             (predecessor, is_back_edge)
         }));
 
-        let mut visited = FxHashSet::default();
+        let mut visited = fx_hash_set!();
         let mut result = vec![];
 
         'dfs: while let Some((location, is_back_edge)) = stack.pop() {

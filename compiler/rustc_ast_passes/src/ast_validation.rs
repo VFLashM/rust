@@ -12,7 +12,6 @@ use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
 use rustc_ast::walk_list;
 use rustc_ast::*;
 use rustc_ast_pretty::pprust;
-use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::{error_code, pluralize, struct_span_err, Applicability};
 use rustc_parse::validate_attr;
 use rustc_session::lint::builtin::PATTERNS_IN_FNS_WITHOUT_BODY;
@@ -724,7 +723,7 @@ fn validate_generic_param_order<'a>(
     span: Span,
 ) {
     let mut max_param: Option<ParamKindOrd> = None;
-    let mut out_of_order = FxHashMap::default();
+    let mut out_of_order = fx_hash_map!();
     let mut param_idents = vec![];
 
     for (kind, bounds, span, ident) in generics {

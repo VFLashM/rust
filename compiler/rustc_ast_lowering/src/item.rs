@@ -6,7 +6,6 @@ use rustc_ast::node_id::NodeMap;
 use rustc_ast::ptr::P;
 use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
 use rustc_ast::*;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Res};
@@ -318,7 +317,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
                 let ty = self.lower_ty(
                     ty,
                     ImplTraitContext::OtherOpaqueTy {
-                        capturable_lifetimes: &mut FxHashSet::default(),
+                        capturable_lifetimes: &mut fx_hash_set!(),
                         origin: hir::OpaqueTyOrigin::Misc,
                     },
                 );
@@ -456,7 +455,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
     ) -> (&'hir hir::Ty<'hir>, hir::BodyId) {
         let mut capturable_lifetimes;
         let itctx = if self.sess.features_untracked().impl_trait_in_bindings {
-            capturable_lifetimes = FxHashSet::default();
+            capturable_lifetimes = fx_hash_set!();
             ImplTraitContext::OtherOpaqueTy {
                 capturable_lifetimes: &mut capturable_lifetimes,
                 origin: hir::OpaqueTyOrigin::Misc,
@@ -872,7 +871,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
                         let ty = self.lower_ty(
                             ty,
                             ImplTraitContext::OtherOpaqueTy {
-                                capturable_lifetimes: &mut FxHashSet::default(),
+                                capturable_lifetimes: &mut fx_hash_set!(),
                                 origin: hir::OpaqueTyOrigin::Misc,
                             },
                         );

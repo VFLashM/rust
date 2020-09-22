@@ -153,7 +153,7 @@ fn encode_dep_graph(tcx: TyCtxt<'_>, encoder: &mut Encoder) {
         let total_node_count = serialized_graph.nodes.len();
         let total_edge_count = serialized_graph.edge_list_data.len();
 
-        let mut counts: FxHashMap<_, Stat> = FxHashMap::default();
+        let mut counts: FxHashMap<_, Stat> = fx_hash_map!();
 
         for (i, &node) in serialized_graph.nodes.iter_enumerated() {
             let stat = counts.entry(node.kind).or_insert(Stat {

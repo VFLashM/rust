@@ -1,6 +1,6 @@
 use rustc_ast::{FloatTy, IntTy, UintTy};
 use rustc_data_structures::base_n;
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashMap;
 use rustc_hir as hir;
 use rustc_hir::def_id::{CrateNum, DefId};
 use rustc_hir::definitions::{DefPathData, DisambiguatedDefPathData};
@@ -27,9 +27,9 @@ pub(super) fn mangle(
         compress: Some(Box::new(CompressionCaches {
             start_offset: prefix.len(),
 
-            paths: FxHashMap::default(),
-            types: FxHashMap::default(),
-            consts: FxHashMap::default(),
+            paths: fx_hash_map!(),
+            types: fx_hash_map!(),
+            consts: fx_hash_map!(),
         })),
         binders: vec![],
         out: String::from(prefix),
@@ -194,7 +194,7 @@ impl SymbolMangler<'tcx> {
         let regions = if value.has_late_bound_regions() {
             self.tcx.collect_referenced_late_bound_regions(value)
         } else {
-            FxHashSet::default()
+            fx_hash_set!()
         };
 
         let mut lifetime_depths =

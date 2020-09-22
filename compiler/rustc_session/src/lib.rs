@@ -7,6 +7,9 @@ extern crate bitflags;
 #[macro_use]
 extern crate rustc_macros;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 pub mod cgu_reuse_tracker;
 pub mod utils;
 #[macro_use]

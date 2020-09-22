@@ -1589,7 +1589,7 @@ impl EncodeContext<'a, 'tcx> {
     fn encode_impls(&mut self) -> Lazy<[TraitImpls]> {
         debug!("EncodeContext::encode_impls()");
         let tcx = self.tcx;
-        let mut visitor = ImplVisitor { tcx, impls: FxHashMap::default() };
+        let mut visitor = ImplVisitor { tcx, impls: fx_hash_map!() };
         tcx.hir().krate().visit_all_item_likes(&mut visitor);
 
         let mut all_impls: Vec<_> = visitor.impls.into_iter().collect();

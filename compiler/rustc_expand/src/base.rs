@@ -979,7 +979,7 @@ impl<'a> ExtCtxt<'a> {
                 directory_ownership: DirectoryOwnership::Owned { relative: None },
                 prior_type_ascription: None,
             },
-            expansions: FxHashMap::default(),
+            expansions: fx_hash_map!(),
         }
     }
 

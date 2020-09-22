@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use rustc_data_structures::binary_search_util;
 use rustc_data_structures::frozen::Frozen;
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::graph::scc::Sccs;
 use rustc_hir::def_id::DefId;
 use rustc_index::vec::IndexVec;
@@ -839,7 +839,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         // Sometimes we register equivalent type-tests that would
         // result in basically the exact same error being reported to
         // the user. Avoid that.
-        let mut deduplicate_errors = FxHashSet::default();
+        let mut deduplicate_errors = fx_hash_set!();
 
         for type_test in &self.type_tests {
             debug!("check_type_test: {:?}", type_test);

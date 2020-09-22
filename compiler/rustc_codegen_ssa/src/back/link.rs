@@ -1,4 +1,3 @@
-use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::temp_dir::MaybeTempDir;
 use rustc_fs_util::fix_windows_verbatim_for_gcc;
 use rustc_hir::def_id::CrateNum;
@@ -1769,9 +1768,9 @@ fn add_upstream_rust_crates<'a, B: ArchiveBuilder<'a>>(
     let mut group_end = None;
     let mut group_start = None;
     // Crates available for linking thus far.
-    let mut available = FxHashSet::default();
+    let mut available = fx_hash_set!();
     // Crates required to satisfy dependencies discovered so far.
-    let mut required = FxHashSet::default();
+    let mut required = fx_hash_set!();
 
     let info = &codegen_results.crate_info;
     for &(cnum, _) in deps.iter().rev() {

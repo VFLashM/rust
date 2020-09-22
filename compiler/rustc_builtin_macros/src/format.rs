@@ -127,7 +127,7 @@ fn parse_args<'a>(
     tts: TokenStream,
 ) -> Result<(P<ast::Expr>, Vec<P<ast::Expr>>, FxHashMap<Symbol, usize>), DiagnosticBuilder<'a>> {
     let mut args = Vec::<P<ast::Expr>>::new();
-    let mut names = FxHashMap::<Symbol, usize>::default();
+    let mut names: FxHashMap<Symbol, usize> = fx_hash_map!();
 
     let mut p = ecx.new_parser_from_tts(tts);
 
@@ -1014,7 +1014,7 @@ pub fn expand_preparsed_format_args(
         curpiece: 0,
         arg_index_map: Vec::new(),
         count_args: Vec::new(),
-        count_positions: FxHashMap::default(),
+        count_positions: fx_hash_map!(),
         count_positions_count: 0,
         count_args_index_offset: 0,
         literal: String::new(),
@@ -1117,7 +1117,7 @@ pub fn expand_preparsed_format_args(
 
             // The set of foreign substitutions we've explained.  This prevents spamming the user
             // with `%d should be written as {}` over and over again.
-            let mut explained = FxHashSet::default();
+            let mut explained = fx_hash_set!();
 
             macro_rules! check_foreign {
                 ($kind:ident) => {{

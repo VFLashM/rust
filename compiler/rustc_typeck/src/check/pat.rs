@@ -1107,7 +1107,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             .collect::<FxHashMap<_, _>>();
 
         // Keep track of which fields have already appeared in the pattern.
-        let mut used_fields = FxHashMap::default();
+        let mut used_fields = fx_hash_map!();
         let mut no_field_errors = true;
 
         let mut inexistent_fields = vec![];

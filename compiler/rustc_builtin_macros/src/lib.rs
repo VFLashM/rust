@@ -12,6 +12,9 @@
 
 extern crate proc_macro;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 use crate::deriving::*;
 
 use rustc_expand::base::{MacroExpanderFn, ResolverExpand, SyntaxExtension, SyntaxExtensionKind};

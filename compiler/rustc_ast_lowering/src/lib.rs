@@ -35,6 +35,9 @@
 #![feature(or_patterns)]
 #![recursion_limit = "256"]
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 use rustc_ast::node_id::NodeMap;
 use rustc_ast::token::{self, DelimToken, Nonterminal, Token};
 use rustc_ast::tokenstream::{DelimSpan, TokenStream, TokenTree};
@@ -1066,7 +1069,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                     //
                     // FIXME: this is only needed until `impl Trait` is allowed in type aliases.
                     ImplTraitContext::Disallowed(_) if self.is_in_dyn_type => {
-                        capturable_lifetimes = FxHashSet::default();
+                        capturable_lifetimes = fx_hash_set!();
                         (
                             true,
                             ImplTraitContext::OtherOpaqueTy {
@@ -1330,7 +1333,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                         // types will inherit lifetimes from this opaque type,
                         // so don't need to capture them again.
                         let nested_itctx = ImplTraitContext::OtherOpaqueTy {
-                            capturable_lifetimes: &mut FxHashSet::default(),
+                            capturable_lifetimes: &mut fx_hash_set!(),
                             origin,
                         };
                         self.lower_opaque_impl_trait(
@@ -1663,7 +1666,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             opaque_ty_id,
             collect_elided_lifetimes: true,
             currently_bound_lifetimes: Vec::new(),
-            already_defined_lifetimes: FxHashSet::default(),
+            already_defined_lifetimes: fx_hash_set!(),
             output_lifetimes: Vec::new(),
             output_lifetime_params: Vec::new(),
             lifetimes_to_include,
@@ -1695,7 +1698,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             self.lower_ty(
                 t,
                 if self.sess.features_untracked().impl_trait_in_bindings {
-                    capturable_lifetimes = FxHashSet::default();
+                    capturable_lifetimes = fx_hash_set!();
                     ImplTraitContext::OtherOpaqueTy {
                         capturable_lifetimes: &mut capturable_lifetimes,
                         origin: hir::OpaqueTyOrigin::Binding,
@@ -2191,7 +2194,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                         self.lower_ty(
                             x,
                             ImplTraitContext::OtherOpaqueTy {
-                                capturable_lifetimes: &mut FxHashSet::default(),
+                                capturable_lifetimes: &mut fx_hash_set!(),
                                 origin: hir::OpaqueTyOrigin::Misc,
                             },
                         )

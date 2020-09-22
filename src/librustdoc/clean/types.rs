@@ -1331,7 +1331,7 @@ impl PrimitiveType {
             /// Commas between elements are required (even if the expression is a block).
             macro_rules! map {
                 ($( $key: expr => $val: expr ),* $(,)*) => {{
-                    let mut map = ::rustc_data_structures::fx::FxHashMap::default();
+                    let mut map = fx_hash_map!();
                     $( map.insert($key, $val); )*
                     map
                 }}

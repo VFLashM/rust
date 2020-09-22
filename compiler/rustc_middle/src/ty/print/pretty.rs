@@ -2202,7 +2202,7 @@ fn for_each_def(tcx: TyCtxt<'_>, mut collect_fn: impl for<'b> FnMut(&'b Ident, N
 fn trimmed_def_paths(tcx: TyCtxt<'_>, crate_num: CrateNum) -> FxHashMap<DefId, Symbol> {
     assert_eq!(crate_num, LOCAL_CRATE);
 
-    let mut map = FxHashMap::default();
+    let mut map = fx_hash_map!();
 
     if let TrimmedDefPaths::GoodPath = tcx.sess.opts.trimmed_def_paths {
         // For good paths causing this bug, the `rustc_middle::ty::print::with_no_trimmed_paths`
@@ -2211,7 +2211,7 @@ fn trimmed_def_paths(tcx: TyCtxt<'_>, crate_num: CrateNum) -> FxHashMap<DefId, S
     }
 
     let unique_symbols_rev: &mut FxHashMap<(Namespace, Symbol), Option<DefId>> =
-        &mut FxHashMap::default();
+        &mut fx_hash_map!();
 
     for symbol_set in tcx.glob_map.values() {
         for symbol in symbol_set {

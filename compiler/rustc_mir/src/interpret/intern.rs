@@ -324,7 +324,7 @@ pub fn intern_const_alloc_recursive<M: CompileTimeMachine<'mir, 'tcx>>(
     // `leftover_allocations` collects *all* allocations we see, because some might not
     // be available in a typed way. They get interned at the end.
     let mut ref_tracking = RefTracking::empty();
-    let leftover_allocations = &mut FxHashSet::default();
+    let leftover_allocations = &mut fx_hash_set!();
 
     // start with the outermost allocation
     intern_shallow(

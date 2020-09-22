@@ -182,7 +182,7 @@ pub struct PlaceholderExpander<'a, 'b> {
 
 impl<'a, 'b> PlaceholderExpander<'a, 'b> {
     pub fn new(cx: &'a mut ExtCtxt<'b>, monotonic: bool) -> Self {
-        PlaceholderExpander { cx, expanded_fragments: FxHashMap::default(), monotonic }
+        PlaceholderExpander { cx, expanded_fragments: fx_hash_map!(), monotonic }
     }
 
     pub fn add(&mut self, id: ast::NodeId, mut fragment: AstFragment) {

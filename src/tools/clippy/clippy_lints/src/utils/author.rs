@@ -152,7 +152,7 @@ impl PrintVisitor {
     #[must_use]
     fn new(s: &'static str) -> Self {
         Self {
-            ids: FxHashMap::default(),
+            ids: fx_hash_map!(),
             current: s.to_owned(),
         }
     }

@@ -1112,8 +1112,8 @@ impl<'hir> LoweringContext<'_, 'hir> {
             }
         }
 
-        let mut used_input_regs = FxHashMap::default();
-        let mut used_output_regs = FxHashMap::default();
+        let mut used_input_regs = fx_hash_map!();
+        let mut used_output_regs = fx_hash_map!();
         for (idx, op) in operands.iter().enumerate() {
             let op_sp = asm.operands[idx].1;
             if let Some(reg) = op.reg() {

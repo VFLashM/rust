@@ -1198,7 +1198,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             .map(|(i, field)| (field.ident.normalize_to_macros_2_0(), (i, field)))
             .collect::<FxHashMap<_, _>>();
 
-        let mut seen_fields = FxHashMap::default();
+        let mut seen_fields = fx_hash_map!();
 
         let mut error_happened = false;
 

@@ -944,10 +944,7 @@ impl<K: DepKind> CurrentDepGraph<K> {
         CurrentDepGraph {
             data: Lock::new(IndexVec::with_capacity(new_node_count_estimate)),
             node_to_node_index: Sharded::new(|| {
-                FxHashMap::with_capacity_and_hasher(
-                    new_node_count_estimate / sharded::SHARDS,
-                    Default::default(),
-                )
+                fx_hash_map_with_capacity!(new_node_count_estimate / sharded::SHARDS)
             }),
             anon_id_seed: stable_hasher.finish(),
             forbidden_edge,
@@ -1084,7 +1081,7 @@ impl<K> Default for TaskDeps<K> {
             #[cfg(debug_assertions)]
             node: None,
             reads: EdgesVec::new(),
-            read_set: FxHashSet::default(),
+            read_set: fx_hash_set!(),
             phantom_data: PhantomData,
         }
     }

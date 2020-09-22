@@ -110,7 +110,7 @@ pub fn load_dep_graph(sess: &Session) -> DepGraphFuture {
     let report_incremental_info = sess.opts.debugging_opts.incremental_info;
     let expected_hash = sess.opts.dep_tracking_hash();
 
-    let mut prev_work_products = FxHashMap::default();
+    let mut prev_work_products = fx_hash_map!();
 
     // If we are only building with -Zquery-dep-graph but without an actual
     // incr. comp. session directory, we skip this. Otherwise we'd fail

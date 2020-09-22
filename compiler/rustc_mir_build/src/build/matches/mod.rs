@@ -178,7 +178,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
         // The set of places that we are creating fake borrows of. If there are
         // no match guards then we don't need any fake borrows, so don't track
         // them.
-        let mut fake_borrows = if match_has_guard { Some(FxHashSet::default()) } else { None };
+        let mut fake_borrows = if match_has_guard { Some(fx_hash_set!()) } else { None };
 
         let mut otherwise = None;
 

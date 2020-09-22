@@ -426,7 +426,7 @@ impl DocFolder for Cache {
                 // Figure out the id of this impl. This may map to a
                 // primitive rather than always to a struct/enum.
                 // Note: matching twice to restrict the lifetime of the `i` borrow.
-                let mut dids = FxHashSet::default();
+                let mut dids = fx_hash_set!();
                 if let clean::Item { inner: clean::ImplItem(ref i), .. } = item {
                     match i.for_ {
                         clean::ResolvedPath { did, .. }

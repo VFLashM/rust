@@ -119,7 +119,7 @@ fn collect<'tcx>(tcx: TyCtxt<'tcx>) -> FxHashMap<Symbol, DefId> {
 /// Traverse and collect all the diagnostic items in all crates.
 fn collect_all<'tcx>(tcx: TyCtxt<'tcx>) -> FxHashMap<Symbol, DefId> {
     // Initialize the collector.
-    let mut collector = FxHashMap::default();
+    let mut collector = fx_hash_map!();
 
     // Collect diagnostic items in other crates.
     for &cnum in tcx.crates().iter().chain(std::iter::once(&LOCAL_CRATE)) {

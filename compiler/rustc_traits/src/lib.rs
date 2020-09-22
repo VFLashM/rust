@@ -11,6 +11,9 @@ extern crate tracing;
 #[macro_use]
 extern crate rustc_middle;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 mod chalk;
 mod dropck_outlives;
 mod evaluate_obligation;

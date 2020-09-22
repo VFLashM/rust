@@ -121,11 +121,11 @@ pub struct RefTracking<T, PATH = ()> {
 
 impl<T: Copy + Eq + Hash + std::fmt::Debug, PATH: Default> RefTracking<T, PATH> {
     pub fn empty() -> Self {
-        RefTracking { seen: FxHashSet::default(), todo: vec![] }
+        RefTracking { seen: fx_hash_set!(), todo: vec![] }
     }
     pub fn new(op: T) -> Self {
         let mut ref_tracking_for_consts =
-            RefTracking { seen: FxHashSet::default(), todo: vec![(op, PATH::default())] };
+            RefTracking { seen: fx_hash_set!(), todo: vec![(op, PATH::default())] };
         ref_tracking_for_consts.seen.insert(op);
         ref_tracking_for_consts
     }

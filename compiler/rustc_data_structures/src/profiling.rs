@@ -450,7 +450,7 @@ impl SelfProfiler {
         Ok(SelfProfiler {
             profiler,
             event_filter_mask,
-            string_cache: RwLock::new(FxHashMap::default()),
+            string_cache: RwLock::new(fx_hash_map!()),
             query_event_kind,
             generic_activity_event_kind,
             incremental_load_result_event_kind,

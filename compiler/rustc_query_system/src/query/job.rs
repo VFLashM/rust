@@ -434,7 +434,7 @@ fn remove_cycle<CTX: QueryContext>(
     wakelist: &mut Vec<Lrc<QueryWaiter<CTX>>>,
     tcx: CTX,
 ) -> bool {
-    let mut visited = FxHashSet::default();
+    let mut visited = fx_hash_set!();
     let mut stack = Vec::new();
     // Look for a cycle starting with the last query in `jobs`
     if let Some(waiter) =

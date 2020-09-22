@@ -1232,10 +1232,10 @@ fn check_for_loop_range<'tcx>(
             let mut visitor = VarVisitor {
                 cx,
                 var: canonical_id,
-                indexed_mut: FxHashSet::default(),
-                indexed_indirectly: FxHashMap::default(),
-                indexed_directly: FxHashMap::default(),
-                referenced: FxHashSet::default(),
+                indexed_mut: fx_hash_set!(),
+                indexed_indirectly: fx_hash_map!(),
+                indexed_directly: fx_hash_map!(),
+                referenced: fx_hash_set!(),
                 nonindex: false,
                 prefer_mutable: false,
             };
@@ -1538,7 +1538,7 @@ fn check_for_loop_explicit_counter<'tcx>(
     // Look for variables that are incremented once per loop iteration.
     let mut visitor = IncrementVisitor {
         cx,
-        states: FxHashMap::default(),
+        states: fx_hash_map!(),
         depth: 0,
         done: false,
     };
@@ -2430,8 +2430,8 @@ fn check_infinite_loop<'tcx>(cx: &LateContext<'tcx>, cond: &'tcx Expr<'_>, expr:
 
     let mut var_visitor = VarCollectorVisitor {
         cx,
-        ids: FxHashSet::default(),
-        def_ids: FxHashMap::default(),
+        ids: fx_hash_set!(),
+        def_ids: fx_hash_map!(),
         skip: false,
     };
     var_visitor.visit_expr(cond);

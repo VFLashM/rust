@@ -285,7 +285,7 @@ impl<'o, 'tcx> dyn AstConv<'tcx> + 'o {
         let mut types_count = 0;
         let mut where_constraints = vec![];
         for (span, assoc_items) in &associated_types {
-            let mut names: FxHashMap<_, usize> = FxHashMap::default();
+            let mut names: FxHashMap<_, usize> = fx_hash_map!();
             for item in assoc_items {
                 types_count += 1;
                 *names.entry(item.ident.name).or_insert(0) += 1;
@@ -346,7 +346,7 @@ impl<'o, 'tcx> dyn AstConv<'tcx> + 'o {
         if suggestions.len() != 1 {
             // We don't need this label if there's an inline suggestion, show otherwise.
             for (span, assoc_items) in &associated_types {
-                let mut names: FxHashMap<_, usize> = FxHashMap::default();
+                let mut names: FxHashMap<_, usize> = fx_hash_map!();
                 for item in assoc_items {
                     types_count += 1;
                     *names.entry(item.ident.name).or_insert(0) += 1;

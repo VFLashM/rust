@@ -74,6 +74,9 @@ extern crate tracing;
 #[macro_use]
 extern crate rustc_middle;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 // These are used by Clippy.
 pub mod check;
 pub mod expr_use_visitor;

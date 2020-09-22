@@ -20,7 +20,7 @@ fn test_all_except_most_recent() {
 
     assert_eq!(
         all_except_most_recent(vec![]).keys().cloned().collect::<FxHashSet<PathBuf>>(),
-        FxHashSet::default()
+        fx_hash_set!()
     );
 }
 
@@ -35,7 +35,7 @@ fn test_timestamp_serialization() {
 
 #[test]
 fn test_find_source_directory_in_iter() {
-    let already_visited = FxHashSet::default();
+    let already_visited = fx_hash_set!();
 
     // Find newest
     assert_eq!(

@@ -1,5 +1,4 @@
 use rustc_attr as attr;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_hir::itemlikevisit::ItemLikeVisitor;
@@ -190,7 +189,7 @@ impl Collector<'tcx> {
     // Process libs passed on the command line
     fn process_command_line(&mut self) {
         // First, check for errors
-        let mut renames = FxHashSet::default();
+        let mut renames = fx_hash_set!();
         for &(ref name, ref new_name, _) in &self.tcx.sess.opts.libs {
             if let &Some(ref new_name) = new_name {
                 let any_duplicate = self

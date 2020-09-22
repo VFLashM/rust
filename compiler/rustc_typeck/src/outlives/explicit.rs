@@ -11,7 +11,7 @@ pub struct ExplicitPredicatesMap<'tcx> {
 
 impl<'tcx> ExplicitPredicatesMap<'tcx> {
     pub fn new() -> ExplicitPredicatesMap<'tcx> {
-        ExplicitPredicatesMap { map: FxHashMap::default() }
+        ExplicitPredicatesMap { map: fx_hash_map!() }
     }
 
     pub fn explicit_predicates_of(

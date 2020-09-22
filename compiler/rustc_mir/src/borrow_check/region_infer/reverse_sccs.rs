@@ -1,7 +1,7 @@
 use crate::borrow_check::constraints::ConstraintSccIndex;
 use crate::borrow_check::RegionInferenceContext;
 use itertools::Itertools;
-use rustc_data_structures::fx::{FxHashMap, FxHashSet};
+use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::graph::vec_graph::VecGraph;
 use rustc_data_structures::graph::WithSuccessors;
 use rustc_middle::ty::RegionVid;
@@ -24,7 +24,7 @@ impl ReverseSccGraph {
         &'a self,
         scc0: ConstraintSccIndex,
     ) -> impl Iterator<Item = RegionVid> + 'a {
-        let mut duplicates = FxHashSet::default();
+        let mut duplicates = fx_hash_set!();
         self.graph
             .depth_first_search(scc0)
             .flat_map(move |scc1| {
@@ -53,7 +53,7 @@ impl RegionInferenceContext<'_> {
         paired_scc_regions.sort();
         let universal_regions = paired_scc_regions.iter().map(|&(_, region)| region).collect();
 
-        let mut scc_regions = FxHashMap::default();
+        let mut scc_regions = fx_hash_map!();
         let mut start = 0;
         for (scc, group) in &paired_scc_regions.into_iter().group_by(|(scc, _)| *scc) {
             let group_size = group.count();

@@ -276,7 +276,6 @@ use self::Usefulness::*;
 use self::WitnessPreference::*;
 
 use rustc_data_structures::captures::Captures;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_index::vec::Idx;
 
 use super::{compare_const_vals, PatternFoldable, PatternFolder};
@@ -1857,7 +1856,7 @@ crate fn is_useful<'p, 'tcx>(
         //     (false | true, false | true) => {}
         // }
         // ```
-        let mut unreachable_subpats = FxHashSet::default();
+        let mut unreachable_subpats = fx_hash_set!();
         // Whether any branch at all is useful.
         let mut any_is_useful = false;
 

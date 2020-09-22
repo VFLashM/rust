@@ -639,7 +639,7 @@ impl<'a, 'tcx> Visitor<'tcx> for LifetimeContext<'a, 'tcx> {
                 debug!("visit_ty: index = {}", index);
 
                 let mut elision = None;
-                let mut lifetimes = FxHashMap::default();
+                let mut lifetimes = fx_hash_map!();
                 let mut non_lifetime_count = 0;
                 for param in generics.params {
                     match param.kind {
@@ -945,7 +945,7 @@ impl<'a, 'tcx> Visitor<'tcx> for LifetimeContext<'a, 'tcx> {
         match bound {
             hir::GenericBound::LangItemTrait { .. } if !self.trait_ref_hack => {
                 let scope = Scope::Binder {
-                    lifetimes: FxHashMap::default(),
+                    lifetimes: fx_hash_map!(),
                     s: self.scope,
                     next_early_index: self.next_early_index(),
                     track_lifetime_uses: true,
@@ -2351,7 +2351,7 @@ impl<'a, 'tcx> LifetimeContext<'a, 'tcx> {
         let span = lifetime_refs[0].span;
         let mut late_depth = 0;
         let mut scope = self.scope;
-        let mut lifetime_names = FxHashSet::default();
+        let mut lifetime_names = fx_hash_set!();
         let mut lifetime_spans = vec![];
         let error = loop {
             match *scope {

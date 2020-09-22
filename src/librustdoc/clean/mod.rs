@@ -755,7 +755,7 @@ impl<'a, 'tcx> Clean<Generics> for (&'a ty::Generics, ty::GenericPredicates<'tcx
             .collect::<Vec<GenericParamDef>>();
 
         // param index -> [(DefId of trait, associated type name, type)]
-        let mut impl_trait_proj = FxHashMap::<u32, Vec<(DefId, String, Ty<'tcx>)>>::default();
+        let mut impl_trait_proj: FxHashMap<u32, Vec<(DefId, String, Ty<'tcx>)>> = fx_hash_map!();
 
         let where_predicates = preds
             .predicates
@@ -847,7 +847,7 @@ impl<'a, 'tcx> Clean<Generics> for (&'a ty::Generics, ty::GenericPredicates<'tcx
         // Note that associated types also have a sized bound by default, but we
         // don't actually know the set of associated types right here so that's
         // handled in cleaning associated types
-        let mut sized_params = FxHashSet::default();
+        let mut sized_params = fx_hash_set!();
         where_predicates.retain(|pred| match *pred {
             WP::BoundPredicate { ty: Generic(ref g), ref bounds } => {
                 if bounds.iter().any(|b| b.is_sized_bound(cx)) {
@@ -1411,9 +1411,9 @@ impl Clean<Type> for hir::Ty<'_> {
 
                 if let Some(&hir::ItemKind::TyAlias(ref ty, ref generics)) = alias {
                     let provided_params = &path.segments.last().expect("segments were empty");
-                    let mut ty_substs = FxHashMap::default();
-                    let mut lt_substs = FxHashMap::default();
-                    let mut ct_substs = FxHashMap::default();
+                    let mut ty_substs = fx_hash_map!();
+                    let mut lt_substs = fx_hash_map!();
+                    let mut ct_substs = fx_hash_map!();
                     let generic_args = provided_params.generic_args();
                     {
                         let mut indices: GenericParamCount = Default::default();
@@ -2205,7 +2205,7 @@ impl Clean<Vec<Item>> for doctree::ExternCrate<'_> {
             });
 
         if please_inline {
-            let mut visited = FxHashSet::default();
+            let mut visited = fx_hash_set!();
 
             let res = Res::Def(DefKind::Mod, DefId { krate: self.cnum, index: CRATE_DEF_INDEX });
 
@@ -2252,7 +2252,7 @@ impl Clean<Vec<Item>> for doctree::Import<'_> {
         let path = self.path.clean(cx);
         let inner = if self.glob {
             if !denied {
-                let mut visited = FxHashSet::default();
+                let mut visited = fx_hash_set!();
                 if let Some(items) = inline::try_inline_glob(cx, path.res, &mut visited) {
                     return items;
                 }
@@ -2271,7 +2271,7 @@ impl Clean<Vec<Item>> for doctree::Import<'_> {
                 }
             }
             if !denied {
-                let mut visited = FxHashSet::default();
+                let mut visited = fx_hash_set!();
                 if let Some(items) =
                     inline::try_inline(cx, path.res, name, Some(self.attrs), &mut visited)
                 {

@@ -8,7 +8,7 @@ use rustc_session::lint;
 use rustc_span::{Span, Symbol};
 
 pub fn check_crate(tcx: TyCtxt<'_>) {
-    let mut used_trait_imports = FxHashSet::default();
+    let mut used_trait_imports = fx_hash_set!();
     for &body_id in tcx.hir().krate().bodies.keys() {
         let item_def_id = tcx.hir().body_owner_def_id(body_id);
         let imports = tcx.used_trait_imports(item_def_id);

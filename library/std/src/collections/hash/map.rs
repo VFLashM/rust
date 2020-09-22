@@ -14,6 +14,7 @@ use crate::hash::{BuildHasher, Hash, Hasher, SipHasher13};
 use crate::iter::{FromIterator, FusedIterator};
 use crate::ops::Index;
 use crate::sys;
+use super::Dropper;
 
 /// A hash map implemented with quadratic probing and SIMD lookup.
 ///
@@ -194,12 +195,30 @@ use crate::sys;
 ///     .iter().cloned().collect();
 /// // use the values stored in map
 /// ```
-
 #[derive(Clone)]
 #[cfg_attr(not(test), rustc_diagnostic_item = "hashmap_type")]
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct HashMap<K, V, S = RandomState> {
     base: base::HashMap<K, V, S>,
+    dropper: Dropper,
+}
+
+impl<K, V, S> HashMap<K, V, S>
+    where S: BuildHasher + Default,
+{
+    /// doc
+    #[inline]
+    #[stable(feature = "rust1", since = "1.0.0")]
+    pub fn new_with_prof(fname: &'static str, line: u32) -> Self {
+        HashMap { base: base::HashMap::with_hasher(Default::default()), dropper: Dropper::new("map", fname, line) }
+    }
+
+    /// doc
+    #[inline]
+    #[stable(feature = "rust1", since = "1.0.0")]
+    pub fn with_capacity_and_prof(cap: usize, fname: &'static str, line: u32) -> Self {
+        HashMap { base: base::HashMap::with_capacity_and_hasher(cap, Default::default()), dropper: Dropper::new("map", fname, line) }
+    }
 }
 
 impl<K, V> HashMap<K, V, RandomState> {
@@ -265,7 +284,7 @@ impl<K, V, S> HashMap<K, V, S> {
     #[inline]
     #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
     pub fn with_hasher(hash_builder: S) -> HashMap<K, V, S> {
-        HashMap { base: base::HashMap::with_hasher(hash_builder) }
+        HashMap { base: base::HashMap::with_hasher(hash_builder), dropper: Dropper::default() }
     }
 
     /// Creates an empty `HashMap` with the specified capacity, using `hash_builder`
@@ -295,7 +314,7 @@ impl<K, V, S> HashMap<K, V, S> {
     #[inline]
     #[stable(feature = "hashmap_build_hasher", since = "1.7.0")]
     pub fn with_capacity_and_hasher(capacity: usize, hash_builder: S) -> HashMap<K, V, S> {
-        HashMap { base: base::HashMap::with_capacity_and_hasher(capacity, hash_builder) }
+        HashMap { base: base::HashMap::with_capacity_and_hasher(capacity, hash_builder), dropper: Dropper::default() }
     }
 
     /// Returns the number of elements the map can hold without reallocating.
@@ -558,6 +577,7 @@ impl<K, V, S> HashMap<K, V, S> {
     #[inline]
     pub fn clear(&mut self) {
         self.base.clear();
+        self.dropper.set(0);
     }
 
     /// Returns a reference to the map's [`BuildHasher`].
@@ -701,7 +721,7 @@ where
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn entry(&mut self, key: K) -> Entry<'_, K, V> {
-        map_entry(self.base.rustc_entry(key))
+        map_entry(self.base.rustc_entry(key), &mut self.dropper)
     }
 
     /// Returns a reference to the value corresponding to the key.
@@ -837,7 +857,9 @@ where
     #[stable(feature = "rust1", since = "1.0.0")]
     #[inline]
     pub fn insert(&mut self, k: K, v: V) -> Option<V> {
-        self.base.insert(k, v)
+        let res = self.base.insert(k, v);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Removes a key from the map, returning the value at the key if the key
@@ -864,7 +886,9 @@ where
         K: Borrow<Q>,
         Q: Hash + Eq,
     {
-        self.base.remove(k)
+        let res = self.base.remove(k);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Removes a key from the map, returning the stored key and value if the
@@ -915,7 +939,9 @@ where
     where
         F: FnMut(&K, &mut V) -> bool,
     {
-        self.base.retain(f)
+        let res = self.base.retain(f);
+        self.dropper.set(self.len());
+        res
     }
 
     /// Creates a consuming iterator visiting all the keys in arbitrary order.
@@ -1720,6 +1746,7 @@ impl<K: Debug, V: Debug> Debug for OccupiedEntry<'_, K, V> {
 #[stable(feature = "rust1", since = "1.0.0")]
 pub struct VacantEntry<'a, K: 'a, V: 'a> {
     base: base::RustcVacantEntry<'a, K, V>,
+    dropper: &'a mut Dropper,
 }
 
 #[stable(feature = "debug_hash_map", since = "1.12.0")]
@@ -2542,6 +2569,7 @@ impl<'a, K: 'a, V: 'a> VacantEntry<'a, K, V> {
     #[inline]
     #[stable(feature = "rust1", since = "1.0.0")]
     pub fn insert(self, value: V) -> &'a mut V {
+        self.dropper.inc();
         self.base.insert(value)
     }
 
@@ -2563,6 +2591,7 @@ impl<'a, K: 'a, V: 'a> VacantEntry<'a, K, V> {
     /// ```
     #[inline]
     fn insert_entry(self, value: V) -> OccupiedEntry<'a, K, V> {
+        self.dropper.inc();
         let base = self.base.insert_entry(value);
         OccupiedEntry { base }
     }
@@ -2591,12 +2620,14 @@ where
 {
     #[inline]
     fn extend<T: IntoIterator<Item = (K, V)>>(&mut self, iter: T) {
-        self.base.extend(iter)
+        self.base.extend(iter);
+        self.dropper.set(self.len());
     }
 
     #[inline]
     fn extend_one(&mut self, (k, v): (K, V)) {
         self.base.insert(k, v);
+        self.dropper.set(self.len());
     }
 
     #[inline]
@@ -2622,12 +2653,14 @@ where
 {
     #[inline]
     fn extend<T: IntoIterator<Item = (&'a K, &'a V)>>(&mut self, iter: T) {
-        self.base.extend(iter)
+        self.base.extend(iter);
+        self.dropper.set(self.len());
     }
 
     #[inline]
     fn extend_one(&mut self, (&k, &v): (&'a K, &'a V)) {
         self.base.insert(k, v);
+        self.dropper.set(self.len());
     }
 
     #[inline]
@@ -2771,10 +2804,10 @@ impl fmt::Debug for RandomState {
 }
 
 #[inline]
-fn map_entry<'a, K: 'a, V: 'a>(raw: base::RustcEntry<'a, K, V>) -> Entry<'a, K, V> {
+fn map_entry<'a, K: 'a, V: 'a>(raw: base::RustcEntry<'a, K, V>, dropper: &'a mut Dropper) -> Entry<'a, K, V> {
     match raw {
         base::RustcEntry::Occupied(base) => Entry::Occupied(OccupiedEntry { base }),
-        base::RustcEntry::Vacant(base) => Entry::Vacant(VacantEntry { base }),
+        base::RustcEntry::Vacant(base) => Entry::Vacant(VacantEntry { base, dropper }),
     }
 }
 

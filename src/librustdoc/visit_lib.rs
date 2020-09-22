@@ -27,7 +27,7 @@ impl<'a, 'tcx> LibEmbargoVisitor<'a, 'tcx> {
             tcx: cx.tcx,
             access_levels: &mut cx.renderinfo.get_mut().access_levels,
             prev_level: Some(AccessLevel::Public),
-            visited_mods: FxHashSet::default(),
+            visited_mods: fx_hash_set!(),
         }
     }
 

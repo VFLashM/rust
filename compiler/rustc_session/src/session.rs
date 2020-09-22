@@ -1418,7 +1418,7 @@ pub fn build_session(
         miri_unleashed_features: Lock::new(Default::default()),
         real_rust_source_base_dir,
         asm_arch,
-        target_features: FxHashSet::default(),
+        target_features: fx_hash_set!(),
         known_attrs: Lock::new(MarkedAttrs::new()),
         used_attrs: Lock::new(MarkedAttrs::new()),
         if_let_suggestions: Default::default(),

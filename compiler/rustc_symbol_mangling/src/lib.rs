@@ -97,6 +97,9 @@
 #[macro_use]
 extern crate rustc_middle;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 use rustc_hir::def_id::{CrateNum, LOCAL_CRATE};
 use rustc_hir::Node;
 use rustc_middle::middle::codegen_fn_attrs::CodegenFnAttrFlags;

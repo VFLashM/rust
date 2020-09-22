@@ -545,7 +545,7 @@ impl<'o, 'tcx> dyn AstConv<'tcx> + 'o {
 
         bounds.trait_bounds.push((poly_trait_ref, span, constness));
 
-        let mut dup_bindings = FxHashMap::default();
+        let mut dup_bindings = fx_hash_map!();
         for binding in &assoc_bindings {
             // Specify type to assert that error was already reported in `Err` case.
             let _: Result<_, ErrorReported> = self.add_predicates_for_ast_type_binding(
@@ -620,7 +620,7 @@ impl<'o, 'tcx> dyn AstConv<'tcx> + 'o {
         let poly_trait_ref = ty::Binder::bind(ty::TraitRef::new(trait_def_id, substs));
         bounds.trait_bounds.push((poly_trait_ref, span, Constness::NotConst));
 
-        let mut dup_bindings = FxHashMap::default();
+        let mut dup_bindings = fx_hash_map!();
         for binding in assoc_bindings {
             let _: Result<_, ErrorReported> = self.add_predicates_for_ast_type_binding(
                 hir_id,
@@ -1065,7 +1065,7 @@ impl<'o, 'tcx> dyn AstConv<'tcx> + 'o {
         }
 
         // Use a `BTreeSet` to keep output in a more consistent order.
-        let mut associated_types: FxHashMap<Span, BTreeSet<DefId>> = FxHashMap::default();
+        let mut associated_types: FxHashMap<Span, BTreeSet<DefId>> = fx_hash_map!();
 
         let regular_traits_refs_spans = bounds
             .trait_bounds

@@ -10,6 +10,9 @@
 #[macro_use]
 extern crate rustc_macros;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 pub use emitter::ColorConfig;
 
 use tracing::debug;

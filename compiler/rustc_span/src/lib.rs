@@ -17,6 +17,9 @@
 #[macro_use]
 extern crate rustc_macros;
 
+#[macro_use]
+extern crate rustc_data_structures;
+
 use rustc_data_structures::AtomicRef;
 use rustc_macros::HashStable_Generic;
 use rustc_serialize::{Decodable, Decoder, Encodable, Encoder};

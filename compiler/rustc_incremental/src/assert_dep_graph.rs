@@ -328,7 +328,7 @@ fn walk_nodes<'q>(
     starts: &FxHashSet<&'q DepNode>,
     direction: Direction,
 ) -> FxHashSet<&'q DepNode> {
-    let mut set = FxHashSet::default();
+    let mut set = fx_hash_set!();
     for &start in starts {
         debug!("walk_nodes: start={:?} outgoing?={:?}", start, direction == OUTGOING);
         if set.insert(start) {

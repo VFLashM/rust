@@ -322,7 +322,7 @@ impl<'a, 'tcx> AutoTraitFinder<'a, 'tcx> {
             ty::PredicateAtom::Projection(poly_proj_pred) => {
                 tcx.collect_referenced_late_bound_regions(&ty::Binder::bind(poly_proj_pred))
             }
-            _ => return FxHashSet::default(),
+            _ => return fx_hash_set!(),
         };
 
         regions
@@ -485,7 +485,7 @@ impl<'a, 'tcx> AutoTraitFinder<'a, 'tcx> {
             param_env_def_id, generic_params
         );
 
-        let mut has_sized = FxHashSet::default();
+        let mut has_sized = fx_hash_set!();
         let mut ty_to_bounds: FxHashMap<_, FxHashSet<_>> = Default::default();
         let mut lifetime_to_bounds: FxHashMap<_, FxHashSet<_>> = Default::default();
         let mut ty_to_traits: FxHashMap<Type, FxHashSet<Type>> = Default::default();

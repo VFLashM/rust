@@ -20,7 +20,7 @@ impl<'a> StringReader<'a> {
             unmatched_braces: Vec::new(),
             matching_delim_spans: Vec::new(),
             last_unclosed_found_span: None,
-            last_delim_empty_block_spans: FxHashMap::default(),
+            last_delim_empty_block_spans: fx_hash_map!(),
             matching_block_spans: Vec::new(),
         };
         let res = tt_reader.parse_all_token_trees();

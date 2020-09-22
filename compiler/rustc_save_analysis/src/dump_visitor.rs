@@ -15,7 +15,6 @@
 
 use rustc_ast as ast;
 use rustc_ast::walk_list;
-use rustc_data_structures::fx::FxHashSet;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind as HirDefKind, Res};
 use rustc_hir::def_id::{DefId, LocalDefId};
@@ -95,8 +94,8 @@ impl<'tcx> DumpVisitor<'tcx> {
             save_ctxt,
             dumper,
             span: span_utils,
-            // mac_defs: FxHashSet::default(),
-            // macro_calls: FxHashSet::default(),
+            // mac_defs: fx_hash_set!(),
+            // macro_calls: fx_hash_set!(),
         }
     }
 
@@ -162,7 +161,7 @@ impl<'tcx> DumpVisitor<'tcx> {
         // (and don't include remapping args anymore)
         let (program, arguments) = {
             let remap_arg_indices = {
-                let mut indices = FxHashSet::default();
+                let mut indices = fx_hash_set!();
                 // Args are guaranteed to be valid UTF-8 (checked early)
                 for (i, e) in env::args().enumerate() {
                     if e.starts_with("--remap-path-prefix=") {

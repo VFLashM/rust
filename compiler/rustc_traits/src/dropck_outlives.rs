@@ -1,4 +1,3 @@
-use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::def_id::DefId;
 use rustc_infer::infer::canonical::{Canonical, QueryResponse};
 use rustc_infer::infer::TyCtxtInferExt;
@@ -73,7 +72,7 @@ fn dropck_outlives<'tcx>(
             let mut ty_stack = vec![(for_ty, 0)];
 
             // Set used to detect infinite recursion.
-            let mut ty_set = FxHashSet::default();
+            let mut ty_set = fx_hash_set!();
 
             let mut fulfill_cx = TraitEngine::new(infcx.tcx);
 
@@ -318,8 +317,8 @@ crate fn adt_dtorck_constraint(
 }
 
 fn dedup_dtorck_constraint(c: &mut DtorckConstraint<'_>) {
-    let mut outlives = FxHashSet::default();
-    let mut dtorck_types = FxHashSet::default();
+    let mut outlives = fx_hash_set!();
+    let mut dtorck_types = fx_hash_set!();
 
     c.outlives.retain(|&val| outlives.replace(val).is_none());
     c.dtorck_types.retain(|&val| dtorck_types.replace(val).is_none());
